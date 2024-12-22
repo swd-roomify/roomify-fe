@@ -23,7 +23,7 @@ jobs:
     
     - name: Connect, Pull, and Build
       run: |
-        sshpass -p "${{ secrets.SSH_PASS }}" ssh -o StrictHostKeyChecking=no admin@pog.threemusketeer.pog.click << EOF
+        sshpass -p "${{ secrets.SSH_PASS }}" ssh -o StrictHostKeyChecking=no admin@pog.threemusketeer.click << EOF
           set -e
           cd /home/admin/Documents/roomify-fe/
           git stash
