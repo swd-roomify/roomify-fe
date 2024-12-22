@@ -1,0 +1,31 @@
+on:
+  push:
+    branches:
+      - tuan
+  workflow_dispatch:
+  
+jobs:
+  run_pull:
+    name: run pull
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+    
+    - name: Add SSH Key
+      uses: webfactory/ssh-agent@v0.8.1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Install sshpass
+      run: sudo apt-get update && sudo apt-get install -y sshpass
+    
+    - name: Connect, Pull, and Build
+      run: |
+        sshpass -p "${{ secrets.SSH_PASS }}" ssh -o StrictHostKeyChecking=no "${{ variables.SSH_USER }}@${{ variables.SSH_HOST }}" << EOF
+          set -e
+          cd /home/admin/Documents/roomify-fe/
+          git stash
+          git pull
+        EOF
