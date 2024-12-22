@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - tuan
+      - develop
   workflow_dispatch:
   
 jobs:
