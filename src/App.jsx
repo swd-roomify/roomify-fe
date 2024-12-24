@@ -30,7 +30,7 @@ function App() {
         body: JSON.stringify({ username }),
       });
 
-      client.subscribe('/topic/map', (message) => {
+      client.subscribe('/topic/positions', (message) => {
         const userMap = JSON.parse(message.body);
         setUsers(userMap);
       });
