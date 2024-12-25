@@ -14,7 +14,7 @@ function App() {
     setCurrentUser(username);
 
     const client = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8081/ws'),
+      webSocketFactory: () => new SockJS('http://localhost:8082/ws'),
       debug: (str) => console.log(str),
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
@@ -68,13 +68,13 @@ function App() {
           newPosition.position_y = Math.max(0, currentPosition.position_y - 10);
           break;
         case 'ArrowDown':
-          newPosition.position_y = Math.min(360, currentPosition.position_y + 10);
+          newPosition.position_y = Math.min(1000, currentPosition.position_y + 10);
           break;
         case 'ArrowLeft':
           newPosition.position_x = Math.max(0, currentPosition.position_x - 10);
           break;
         case 'ArrowRight':
-          newPosition.position_x = Math.min(360, currentPosition.position_x + 10);
+          newPosition.position_x = Math.min(1000, currentPosition.position_x + 10);
           break;
         default:
           return;
