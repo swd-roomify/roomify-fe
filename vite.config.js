@@ -8,7 +8,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/ws': {
-        target: 'http://localhost:8081',
+        target: process.env.VITE_REACT_APP_WS_URL || 'http://localhost:8081',
         ws: true,
         changeOrigin: true,
       },
