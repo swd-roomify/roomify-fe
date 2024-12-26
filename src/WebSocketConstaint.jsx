@@ -20,7 +20,12 @@ export const WS_CONFIG = {
 };
 
 export const createStompConfig = () => ({
-    webSocketFactory: () => new SockJS(WS_ENDPOINT),
+    webSocketFactory: () => {
+        const sockJs = new SockJS(WS_ENDPOINT, null, {
+            withCredentials: true,
+        });
+        return sockJs;
+    },
     debug: (str) => console.log(str),
     reconnectDelay: WS_CONFIG.RECONNECT_DELAY,
     heartbeatIncoming: WS_CONFIG.HEARTBEAT.INCOMING,
