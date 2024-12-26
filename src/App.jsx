@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { Client } from '@stomp/stompjs';
+import React, { useEffect, useState } from 'react';
 import GameArea from './components/GameArea';
 import UserList from './components/UserList';
-import { Client } from '@stomp/stompjs';
-import {WS_TOPICS, WS_ROUTES, createStompConfig } from './WebSocketConstaint';
+import { WS_ROUTES, WS_TOPICS, createStompConfig } from './WebSocketConstaint';
 
 function App() {
   const [users, setUsers] = useState({});
