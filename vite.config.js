@@ -6,13 +6,6 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
-    proxy: {
-      '/ws': {
-        target: import.meta.env.VITE_REACT_APP_WS_URL || 'http://localhost:8081',
-        ws: true,
-        changeOrigin: true,
-      },
-    },
   },
   define: {
     global: {},
