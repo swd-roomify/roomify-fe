@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import GameArea from './components/GameArea';
 import UserList from './components/UserList';
-import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
+import {WS_TOPICS, WS_ROUTES, createStompConfig } from './WebSocketConstaint';
 
 function App() {
   const [users, setUsers] = useState({});
@@ -13,24 +13,18 @@ function App() {
     const username = prompt('Enter your username: ');
     setCurrentUser(username);
 
-    const client = new Client({
-      webSocketFactory: () => new SockJS('http://backend-media:8081/ws'),
-      debug: (str) => console.log(str),
-      reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
-    });
+    const client = new Client(createStompConfig());
 
     client.onConnect = (frame) => {
       console.log('Connected:', frame);
       setStompClient(client);
 
       client.publish({
-        destination: '/app/join',
+        destination: WS_ROUTES.JOIN,
         body: JSON.stringify({ username }),
       });
 
-      client.subscribe('/topic/positions', (message) => {
+      client.subscribe(WS_TOPICS.POSITIONS, (message) => {
         const userMap = JSON.parse(message.body);
         setUsers(userMap);
       });
@@ -50,7 +44,7 @@ function App() {
   const sendPosition = (position) => {
     if (stompClient?.active) {
       stompClient.publish({
-        destination: '/app/move',
+        destination: WS_ROUTES.MOVE,
         body: JSON.stringify({ username: currentUser, ...position }),
       });
     }
