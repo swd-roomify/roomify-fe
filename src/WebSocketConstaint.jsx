@@ -1,6 +1,7 @@
 import SockJS from 'sockjs-client';
 
-export const WS_ENDPOINT = import.meta.env.VITE_REACT_APP_WS_URL || 'http://pog.threemusketeer.click:8081/ws';
+export const WS_ENDPOINT = import.meta.env.VITE_REACT_APP_WS_URL || 
+    (window.location.protocol === 'https:' ? 'wss://pog.threemusketeer.click/ws' : 'ws://pog.threemusketeer.click:8081/ws');
 
 export const WS_TOPICS = {
     POSITIONS: '/topic/positions',
