@@ -3,19 +3,21 @@ import React from 'react';
 function GameArea({ users }) {
   return (
     <div
-      id="game-area"
-      style={{
-        width: "90vw",
-        maxWidth: "400px",
-        height: "90vw",
-        maxHeight: "400px",
-        backgroundColor: "#f9f9f9",
-        border: "2px solid #ccc",
-        position: "relative",
-        margin: "0 auto",
-        backgroundImage: "url('/background.png')"
-      }}
-    >
+  id="game-area"
+  style={{
+    width: "90vw",
+    maxWidth: "400px",
+    height: "90vw",
+    maxHeight: "400px",
+    backgroundImage: "url('/background.png')", // Sử dụng background image
+    backgroundSize: "cover", // Phủ đầy vùng game
+    backgroundPosition: "center", // Căn giữa ảnh
+    backgroundRepeat: "no-repeat", // Không lặp lại ảnh
+    border: "2px solid #ccc",
+    position: "relative",
+    margin: "0 auto",
+  }}
+>
       {Object.entries(users).map(([username, userData]) => (
         <div
           key={username}
