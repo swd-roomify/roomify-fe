@@ -9,6 +9,12 @@ function App() {
   const [users, setUsers] = useState({});
   const [stompClient, setStompClient] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [nearbyUsers, setNearbyUsers] = useState([]);
+
+
+  const handleNearbyUsersChange = (users) => {
+    setNearbyUsers(users);
+  };
 
   useEffect(() => {
     const username = prompt('Enter your username: ');
@@ -94,8 +100,49 @@ function App() {
   return (
     <div>
       <h1>WebSocket Box Control</h1>
+      <GameArea
+        users={users}
+        currentUser={currentUser}
+        onNearbyUsersChange={handleNearbyUsersChange}
+      />
       <UserList users={users} />
-      <GameArea users={users} />
+
+      {/* Camera placeholders */}
+      <div
+        id="camera-placeholders"
+        style={{
+          position: "fixed",
+          bottom: "0",
+          left: "0",
+          width: "100%",
+          backgroundColor: "#000",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "10px",
+          overflowX: "auto",
+        }}
+      >
+        {nearbyUsers.map((username) => (
+          <div
+            key={username}
+            style={{
+              width: "150px",
+              height: "100px",
+              margin: "0 10px",
+              backgroundColor: "#333",
+              color: "white",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: "5px",
+              fontSize: "14px",
+            }}
+          >
+            {username}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
