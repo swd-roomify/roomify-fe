@@ -19,7 +19,6 @@ export const WS_CONFIG = {
     }
 };
 
-
 export const createStompConfig = () => ({
     webSocketFactory: () => {
         const sockJs = new SockJS(WS_ENDPOINT, null, {
