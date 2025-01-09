@@ -40,3 +40,11 @@ td {
 th {
   background-color: #f4f4f4;
 }
+
+#camera-placeholders {
+  transition: all 0.3s ease;
+}
+
+#camera-placeholders > div {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
