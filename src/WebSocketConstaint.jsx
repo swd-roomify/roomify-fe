@@ -22,7 +22,7 @@ export const WS_CONFIG = {
 
 export const createStompConfig = () => ({
     webSocketFactory: () => {
-        const sockJs = new SockJS(WS_ENDPOINT, null, {
+        const sockJs = new SockJS('https://pog.threemusketeer.click/ws', null, {
             withCredentials: true,
         });
         return sockJs;
