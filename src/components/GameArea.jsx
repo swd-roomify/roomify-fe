@@ -5,13 +5,15 @@ function GameArea({ users }) {
     <div
       id="game-area"
       style={{
-        width: "1000px",
-        height: "1000px",
-        backgroundImage: "url('/background.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        width: "90vw",
+        maxWidth: "400px",
+        height: "90vw",
+        maxHeight: "400px",
+        backgroundColor: "#f9f9f9",
+        border: "2px solid #ccc",
         position: "relative",
+        margin: "0 auto",
+        backgroundImage: "url('/background.png')"
       }}
     >
       {Object.entries(users).map(([username, userData]) => (
@@ -20,10 +22,12 @@ function GameArea({ users }) {
           className="box"
           style={{
             position: "absolute",
-            left: `${userData.position_x}px`,
-            top: `${userData.position_y}px`,
-            width: "40px",
-            height: "40px",
+            left: `${Math.min(Math.max(userData.position_x, 0), 360)}px`, // Giới hạn tọa độ trong vùng game
+            top: `${Math.min(Math.max(userData.position_y, 0), 360)}px`,
+            width: "10%",
+            maxWidth: "40px",
+            height: "10%",
+            maxHeight: "40px",
             backgroundColor: username === "your-username" ? "blue" : "red",
           }}
         />
@@ -31,5 +35,6 @@ function GameArea({ users }) {
     </div>
   );
 }
+
 
 export default GameArea;

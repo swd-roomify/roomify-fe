@@ -1,5 +1,6 @@
 import { Client } from '@stomp/stompjs';
 import React, { useEffect, useState } from 'react';
+import './App.css';
 import GameArea from './components/GameArea';
 import UserList from './components/UserList';
 import { WS_ROUTES, WS_TOPICS, createStompConfig } from './WebSocketConstaint';
@@ -53,34 +54,38 @@ function App() {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (!currentUser || !users[currentUser]) return;
-
+    
       const currentPosition = users[currentUser];
       let newPosition = { ...currentPosition };
-
+    
+      const step = 10; // Bước di chuyển
+      const maxBoundary = 360; // Giới hạn tọa độ trong game area (400px - 40px box)
+    
       switch (event.key) {
-        case 'ArrowUp':
-          newPosition.position_y = Math.max(0, currentPosition.position_y - 10);
+        case "ArrowUp":
+          newPosition.position_y = Math.max(0, currentPosition.position_y - step);
           break;
-        case 'ArrowDown':
-          newPosition.position_y = Math.min(1000, currentPosition.position_y + 10);
+        case "ArrowDown":
+          newPosition.position_y = Math.min(maxBoundary, currentPosition.position_y + step);
           break;
-        case 'ArrowLeft':
-          newPosition.position_x = Math.max(0, currentPosition.position_x - 10);
+        case "ArrowLeft":
+          newPosition.position_x = Math.max(0, currentPosition.position_x - step);
           break;
-        case 'ArrowRight':
-          newPosition.position_x = Math.min(1000, currentPosition.position_x + 10);
+        case "ArrowRight":
+          newPosition.position_x = Math.min(maxBoundary, currentPosition.position_x + step);
           break;
         default:
           return;
       }
-
+    
       setUsers((prevUsers) => ({
         ...prevUsers,
         [currentUser]: newPosition,
       }));
-
+    
       sendPosition(newPosition);
     };
+    
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -89,8 +94,8 @@ function App() {
   return (
     <div>
       <h1>WebSocket Box Control</h1>
-      <GameArea users={users} />
       <UserList users={users} />
+      <GameArea users={users} />
     </div>
   );
 }

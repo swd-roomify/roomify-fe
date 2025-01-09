@@ -3,7 +3,6 @@ import React from 'react';
 function UserList({ users }) {
   return (
     <div id="user-list">
-      <h3>Users on the Map</h3>
       <table>
         <thead>
           <tr>

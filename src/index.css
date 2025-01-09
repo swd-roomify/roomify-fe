@@ -1,15 +1,19 @@
 #game-area {
-  width: 400px;
-  height: 400px;
+  width: 90vw; /* Sử dụng tỷ lệ phần trăm để responsive */
+  max-width: 400px;
+  height: 90vw;
+  max-height: 400px;
   background-color: #f9f9f9;
   border: 2px solid #ccc;
   position: relative;
-  margin: 20px;
+  margin: 0 auto; /* Center the game area */
 }
 
 .box {
-  width: 40px;
-  height: 40px;
+  width: 10%; /* Tỷ lệ dựa trên kích thước game area */
+  height: 10%;
+  max-width: 40px;
+  max-height: 40px;
   position: absolute;
   background-color: red;
   transition: transform 0.2s ease-in-out;
@@ -17,15 +21,15 @@
 
 #user-list {
   margin-top: 20px;
+  text-align: center;
 }
 
 table {
   border-collapse: collapse;
-  width: 100%;
-  margin-top: 10px;
+  margin: 0 auto;
+  max-width: 90%;
 }
 
-table,
 th,
 td {
   border: 1px solid #ccc;
