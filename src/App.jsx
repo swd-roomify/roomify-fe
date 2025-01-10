@@ -15,6 +15,7 @@ function App() {
     setNearbyUsers(users);
   };
 
+  
   useEffect(() => {
     const client = new Client(createStompConfig());
 
