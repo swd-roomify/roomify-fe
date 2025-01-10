@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 function GameArea({ users, currentUser, onNearbyUsersChange }) {
   // Kiểm tra khoảng cách giữa hai người dùng
@@ -17,25 +17,34 @@ function GameArea({ users, currentUser, onNearbyUsersChange }) {
       isNearby(users[currentUser], userData)
   );
 
-  // Gửi danh sách người gần `currentUser` đến App
-  React.useEffect(() => {
-    onNearbyUsersChange(nearbyUsers.map(([username]) => username));
+  // Lưu trữ danh sách `nearbyUsers` trước đó để so sánh
+  const previousNearbyUsers = useRef([]);
+
+  useEffect(() => {
+    const currentNearbyUsernames = nearbyUsers.map(([username]) => username);
+    if (
+      JSON.stringify(previousNearbyUsers.current) !==
+      JSON.stringify(currentNearbyUsernames)
+    ) {
+      previousNearbyUsers.current = currentNearbyUsernames; // Cập nhật danh sách trước đó
+      onNearbyUsersChange(currentNearbyUsernames); // Gửi danh sách mới
+    }
   }, [nearbyUsers, onNearbyUsersChange]);
 
   return (
     <div
       id="game-area"
       style={{
-        width: "90vw",
-        maxWidth: "400px",
-        height: "90vw",
-        maxHeight: "400px",
+        width: '90vw',
+        maxWidth: '400px',
+        height: '90vw',
+        maxHeight: '400px',
         backgroundImage: "url('/background.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        position: "relative",
-        margin: "0 auto",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        position: 'relative',
+        margin: '0 auto',
       }}
     >
       {Object.entries(users).map(([username, userData]) => (
@@ -43,12 +52,12 @@ function GameArea({ users, currentUser, onNearbyUsersChange }) {
           key={username}
           className="box"
           style={{
-            position: "absolute",
+            position: 'absolute',
             left: `${userData.position_x}px`,
             top: `${userData.position_y}px`,
-            width: "40px",
-            height: "40px",
-            backgroundColor: username === currentUser ? "blue" : "red",
+            width: '40px',
+            height: '40px',
+            backgroundColor: username === currentUser ? 'blue' : 'red',
           }}
         />
       ))}
@@ -57,4 +66,3 @@ function GameArea({ users, currentUser, onNearbyUsersChange }) {
 }
 
 export default GameArea;
-
