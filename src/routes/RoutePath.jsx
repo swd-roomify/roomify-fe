@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import MenuPage from '../components/menu/MenuPage'
 import App from '../App'
+import Game from '../components/game/Game'
 
 const RoutePath = () => {
   return (
@@ -9,6 +10,7 @@ const RoutePath = () => {
         <Routes>
             <Route path='/' element={<MenuPage/>}/>
             <Route path='/game' element={<App/>}/>
+            <Route path='/demo' element={<Game/>}/>
         </Routes>
     </BrowserRouter>
   )

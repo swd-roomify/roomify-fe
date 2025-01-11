@@ -8,7 +8,7 @@ const MenuPage = () => {
   const handleJoinRoom = () => {
     if (username.trim()) {
       localStorage.setItem('username', username);
-      navigate('/game');
+      navigate('/demo');
     }
   };
 
