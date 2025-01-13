@@ -3,7 +3,7 @@ import Phaser from "phaser";
 import useWebSocket from "../../utils/useWebSocket";
 import { createStompConfig, WS_ROUTES, WS_TOPICS } from "../../WebSocketConstaint";
 
-const Game = ({currentUser}) => {
+const Game = ({currentUser= localStorage.getItem('username')} ) => {
     const gameRef = useRef(null);
     const phaserContainer = useRef(null);
 
@@ -117,7 +117,7 @@ const Game = ({currentUser}) => {
     
     function update() {
         if(cursors.left.isDown || cursors.right.isDown || cursors.up.isDown || cursors.down.isDown){
-            console.log(`${localStorage.getItem('username')}: {x: ${Math.round(player.x)}, y: ${Math.round(player.y)}}`);
+            // console.log(`${localStorage.getItem('username')}: {x: ${Math.round(player.x)}, y: ${Math.round(player.y)}}`);
         }
         if (cursors.left.isDown && player.x >= 200) {
             player.setVelocityX(-200);
