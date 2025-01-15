@@ -29,26 +29,17 @@ const usePlayerMovement = (initialPosition) => {
   useEffect(() => {
     const step = 5; // Speed of movement
     const interval = setInterval(() => {
-      const isMoving =
-        keysPressed.ArrowUp ||
-        keysPressed.ArrowDown ||
-        keysPressed.ArrowLeft ||
-        keysPressed.ArrowRight;
+      setPosition((prev) => {
+        let { x, y } = prev;
 
-      if (isMoving) {
-        setPosition((prev) => {
-          let { x, y } = prev;
+        if (keysPressed.ArrowUp) y -= step;
+        if (keysPressed.ArrowDown) y += step;
+        if (keysPressed.ArrowLeft) x -= step;
+        if (keysPressed.ArrowRight) x += step;
 
-          if (keysPressed.ArrowUp) y -= step;
-          if (keysPressed.ArrowDown) y += step;
-          if (keysPressed.ArrowLeft) x -= step;
-          if (keysPressed.ArrowRight) x += step;
-
-          console.log(`Position: x=${x}, y=${y}`); 
-          return { x, y };
-        });
-      }
-    }, 16); 
+        return { x, y };
+      });
+    }, 16); // Approximately 60fps
 
     return () => clearInterval(interval);
   }, [keysPressed]);
