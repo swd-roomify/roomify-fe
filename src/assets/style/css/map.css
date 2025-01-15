@@ -1,0 +1,26 @@
+.map {
+    position: relative;
+    width: 100%; /* or a specific width like '800px' */
+    height: 500px; /* Ensure the map has a height */
+    background-color: blue; /* Blue background */
+    overflow: hidden;
+  }
+  
+  
+  .player {
+    position: absolute;
+    transform: translate(-50%, -50%); /* Center the player at the coordinates */
+  }
+  
+  .player-name {
+    text-align: center;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  
+  .player-character {
+    width: 50px;
+    height: 50px;
+  }
+  

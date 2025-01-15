@@ -1,9 +1,10 @@
 import React from 'react'
+import Map from '../../components/game/Map'
 
 const Game = () => {
-  return (
-    <div>Game</div>
-  )
+    return (
+        <Map />
+    )
 }
 
 export default Game
