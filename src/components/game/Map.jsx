@@ -11,55 +11,39 @@ const Map = () => {
     character: 'character',
   });
 
-  // Hardcoded other players for viewing
-  const [allPlayers, setAllPlayers] = useState([
-    { name: 'Player001', character: 'character4', x: 15, y: 5 },
-    { name: 'Player004', character: 'character4', x: 1460, y: 475 },
-  ]);
-
   const position = usePlayerMovement({ x: 300, y: 200 });
-
   const prevPositionRef = useRef(position);
 
-  const {users, sendPosition} = useWebSocket(createStompConfig, WS_ROUTES, WS_TOPICS, currentPlayer.name);
+  const { users, sendPosition } = useWebSocket(createStompConfig, WS_ROUTES, WS_TOPICS, currentPlayer.name);
 
   useEffect(() => {
     if (
       position.x !== prevPositionRef.current.x ||
       position.y !== prevPositionRef.current.y
     ) {
-      // console.log(`Position: x=${position.x}, y=${position.y}`);
       prevPositionRef.current = position;
-      sendPosition(position);
+      sendPosition({ position_x: position.x, position_y: position.y });
     }
-  }, [position,sendPosition]);
+  }, [position, sendPosition]);
 
-
+  useEffect(() => {
+    // Log the users object whenever it changes (optional)
+    console.log('Users updated:', users);
+  }, [users]);
 
   return (
     <div className="map">
-      <div
-        className="player"
-        style={{
-          position: 'absolute',
-          top: position.y,
-          left: position.x,
-        }}
-      >
-        <Player name={currentPlayer.name} character={currentPlayer.character} />
-      </div>
-
-      {allPlayers.map((player, index) => (
+      {Object.values(users).map((player, index) => (
         <div
           key={index}
           className="player"
           style={{
             position: 'absolute',
-            top: player.y,
-            left: player.x,
+            top: player.position_y,  // Changed to position_y
+            left: player.position_x,  // Changed to position_x
           }}
         >
-          <Player name={player.name} character={player.character} />
+          <Player name={player.username} character={"character2"} />
         </div>
       ))}
     </div>
