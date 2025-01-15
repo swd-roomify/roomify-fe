@@ -43,7 +43,7 @@ const Map = () => {
             left: player.position_x,  // Changed to position_x
           }}
         >
-          <Player name={player.username} character={"character2"} />
+          <Player name={player.username} character={player.username === currentPlayer.name ? 'character' : 'character2'} />
         </div>
       ))}
     </div>
