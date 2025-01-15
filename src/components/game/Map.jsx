@@ -6,7 +6,7 @@ import usePlayerMovement from '../../hooks/usePlayerMovement';
 const Map = () => {
   const [currentPlayer, setCurrentPlayer] = useState({
     name: `Player${Math.floor(100000 + Math.random() * 900000)}`,
-    character: 'character', // Replace with the actual character name
+    character: 'character',
   });
 
   // Hardcoded other players for viewing
@@ -33,7 +33,6 @@ const Map = () => {
 
   return (
     <div className="map">
-      {/* Render the current player */}
       <div
         className="player"
         style={{
@@ -45,7 +44,6 @@ const Map = () => {
         <Player name={currentPlayer.name} character={currentPlayer.character} />
       </div>
 
-      {/* Render other players */}
       {allPlayers.map((player, index) => (
         <div
           key={index}
