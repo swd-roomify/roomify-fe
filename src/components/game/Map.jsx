@@ -7,6 +7,7 @@ import { createStompConfig, WS_ROUTES, WS_TOPICS } from '../../WebSocketConstain
 
 const Map = () => {
   const [currentPlayer, setCurrentPlayer] = useState({
+    userId: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     name: `Player${Math.floor(100000 + Math.random() * 900000)}`,
     character: 'character',
   });
@@ -14,7 +15,7 @@ const Map = () => {
   const position = usePlayerMovement({ x: 300, y: 200 });
   const prevPositionRef = useRef(position);
 
-  const { users, sendPosition } = useWebSocket(createStompConfig, WS_ROUTES, WS_TOPICS, currentPlayer.name);
+  const { users, sendPosition } = useWebSocket(createStompConfig, WS_ROUTES, WS_TOPICS, currentPlayer);
 
   useEffect(() => {
     if (
@@ -27,20 +28,19 @@ const Map = () => {
   }, [position, sendPosition]);
 
   useEffect(() => {
-    // Log the users object whenever it changes (optional)
     console.log('Users updated:', users);
   }, [users]);
 
   return (
     <div className="map">
-      {Object.values(users).map((player, index) => (
+      {Object.values(users).map((player) => (
         <div
-          key={index}
+          key={player.userId}
           className="player"
           style={{
             position: 'absolute',
-            top: player.position_y,  // Changed to position_y
-            left: player.position_x,  // Changed to position_x
+            top: player.position_y,
+            left: player.position_x,
           }}
         >
           <Player name={player.username} character={player.username === currentPlayer.name ? 'character' : 'character2'} />

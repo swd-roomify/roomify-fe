@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Client } from '@stomp/stompjs';
 
-const useWebSocket = (createStompConfig, routes, topics, currentUser) => {
+const useWebSocket = (createStompConfig, routes, topics, currentPlayer) => {
   const [stompClient, setStompClient] = useState(null);
   const [users, setUsers] = useState({});
 
@@ -11,10 +11,10 @@ const useWebSocket = (createStompConfig, routes, topics, currentUser) => {
     client.onConnect = () => {
       setStompClient(client);
 
-      if (currentUser) {
+      if (currentPlayer) {
         client.publish({
           destination: routes.JOIN,
-          body: JSON.stringify({ username: currentUser }),
+          body: JSON.stringify({ userId: currentPlayer.userId, username: currentPlayer.name }),
         });
       }
 
@@ -33,13 +33,13 @@ const useWebSocket = (createStompConfig, routes, topics, currentUser) => {
         client.deactivate();
       }
     };
-  }, [createStompConfig, currentUser, routes.JOIN, topics.POSITIONS]);
+  }, [createStompConfig, currentPlayer, routes.JOIN, topics.POSITIONS]);
 
   const sendPosition = (position) => {
     if (stompClient?.active) {
       stompClient.publish({
         destination: routes.MOVE,
-        body: JSON.stringify({ username: currentUser, ...position }),
+        body: JSON.stringify({ userId: currentPlayer.userId, username: currentPlayer.name, ...position }),
       });
     }
   };
