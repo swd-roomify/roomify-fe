@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import MenuPage from '../components/menu/MenuPage'
+import MenuPage from '../pages/menu/MenuPage'
 import Game from '../pages/gamePage/Game'
 
 const RoutePath = () => {
