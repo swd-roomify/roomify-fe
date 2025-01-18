@@ -3,7 +3,7 @@ import "../../assets/style/css/map.css";
 import Player from './Player';
 import usePlayerMovement from '../../hooks/usePlayerMovement';
 import useWebSocket from '../../hooks/useWebSocket';
-import { createStompConfig, WS_ROUTES, WS_TOPICS } from '../../WebSocketConstaint';
+import { createStompConfig, WS_ROUTES, WS_TOPICS } from '../../constants/WebSocketConstaint';
 
 const calculateDistance = (pos1, pos2) => {
   const dx = pos1.x - pos2.x;
