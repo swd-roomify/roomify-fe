@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Client } from '@stomp/stompjs';
 
-const useWebSocket = (createStompConfig, routes, topics, currentPlayer) => {
+const useWebSocket = (createStompConfig, routes, topics, user) => {
   const [stompClient, setStompClient] = useState(null);
   const [users, setUsers] = useState({});
 
@@ -11,15 +11,17 @@ const useWebSocket = (createStompConfig, routes, topics, currentPlayer) => {
     client.onConnect = () => {
       setStompClient(client);
 
-      if (currentPlayer) {
+      if (user) {
+        console.log(`About to connect user ${user.user_id} with the user name ${user.username} to backend websocket`);
         client.publish({
           destination: routes.JOIN,
-          body: JSON.stringify({ userId: currentPlayer.userId, username: currentPlayer.name }),
+          body: JSON.stringify({ userId: user.user_id, username: user.username }),
         });
       }
 
       client.subscribe(topics.POSITIONS, (message) => {
         const userMap = JSON.parse(message.body);
+        console.log('Received user positions:', userMap);
         setUsers(userMap);
       });
     };
@@ -33,13 +35,14 @@ const useWebSocket = (createStompConfig, routes, topics, currentPlayer) => {
         client.deactivate();
       }
     };
-  }, [createStompConfig, currentPlayer, routes.JOIN, topics.POSITIONS]);
+  }, [createStompConfig, user, routes.JOIN, topics.POSITIONS]);
 
   const sendPosition = (position) => {
+    console.log(`Send position from user ${user.user_id} `)
     if (stompClient?.active) {
       stompClient.publish({
         destination: routes.MOVE,
-        body: JSON.stringify({ userId: currentPlayer.userId, username: currentPlayer.name, ...position }),
+        body: JSON.stringify({ userId: user.user_id, username: user.username, ...position }),
       });
     }
   };
@@ -48,3 +51,5 @@ const useWebSocket = (createStompConfig, routes, topics, currentPlayer) => {
 };
 
 export default useWebSocket;
+
+

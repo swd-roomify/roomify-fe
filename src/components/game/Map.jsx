@@ -11,17 +11,11 @@ const calculateDistance = (pos1, pos2) => {
   return Math.sqrt(dx * dx + dy * dy);
 };
 
-const Map = ({ onNearbyPlayersUpdate }) => {
-  const [currentPlayer, setCurrentPlayer] = useState({
-    userId: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-    name: `Player${Math.floor(100000 + Math.random() * 900000)}`,
-    character: 'character',
-  });
-
+const Map = ({ onNearbyPlayersUpdate, user }) => {
   const position = usePlayerMovement({ x: 300, y: 200 });
   const prevPositionRef = useRef(position);
 
-  const { users, sendPosition } = useWebSocket(createStompConfig, WS_ROUTES, WS_TOPICS, currentPlayer);
+  const { users, sendPosition } = useWebSocket(createStompConfig, WS_ROUTES, WS_TOPICS, user);
 
   useEffect(() => {
     if (
@@ -39,17 +33,17 @@ const Map = ({ onNearbyPlayersUpdate }) => {
         x: player.position_x,
         y: player.position_y,
       });
-      return distance <= 50 && player.userId !== currentPlayer.userId;
+      return distance <= 50 && player.user_id !== user.user_id;
     });
 
-    onNearbyPlayersUpdate(nearbyPlayers); // Cập nhật danh sách người chơi gần nhau
+    onNearbyPlayersUpdate(nearbyPlayers);
   }, [users, position, onNearbyPlayersUpdate]);
 
   return (
     <div className="map">
       {Object.values(users).map((player) => (
         <div
-          key={player.userId}
+          key={player.user_id}
           className="player"
           style={{
             position: 'absolute',
@@ -57,7 +51,7 @@ const Map = ({ onNearbyPlayersUpdate }) => {
             left: player.position_x,
           }}
         >
-          <Player name={player.username} character={player.username === currentPlayer.name ? 'character' : 'character2'} />
+          <Player name={player.username} character={player.user_id === user.user_id ? 'character' : 'character2'} />
         </div>
       ))}
     </div>

@@ -11,17 +11,17 @@ const Game = () => {
 
   useEffect(() => {
     const { state } = location;
-    if (!state || !state.username) {
-      navigate('/');
+    if (!state || state.user == null) {
+      navigate('/'); 
     }
   }, [location, navigate]);
 
-  const username = location.state?.username;
-
+  const user = location.state?.user;
+  
   return (
     <>
       <Camera nearbyPlayers={nearbyPlayers} />
-      <Map onNearbyPlayersUpdate={setNearbyPlayers} />
+      <Map onNearbyPlayersUpdate={setNearbyPlayers} user={user} />
     </>
   );
 };

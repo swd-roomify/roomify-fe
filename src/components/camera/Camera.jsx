@@ -5,7 +5,7 @@ const Camera = ({ nearbyPlayers }) => {
   return (
     <div className="camera-container">
       {nearbyPlayers.map((player) => (
-        <div key={player.userId} className="camera-placeholder">
+        <div key={player.user_id} className="camera-placeholder">
           <div className="camera-name">{player.username}</div>
         </div>
       ))}

@@ -3,11 +3,37 @@ import { useNavigate } from 'react-router-dom';
 
 const MenuPage = () => {
   const [username, setUsername] = useState('');
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
-  const handleJoinRoom = () => {
+  const handleJoinRoom = async () => {
     if (username.trim()) {
-      navigate('/demo', { state: { username } });
+      setLoading(true); 
+
+      try {
+        const response = await fetch('http://localhost:8081/api/user/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: username,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to generate user');
+        }
+
+        const user = await response.json(); 
+        console.log(user); 
+
+        navigate('/demo', { state: { user } });
+      } catch (error) {
+        console.error('Error generating user:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -29,6 +55,7 @@ const MenuPage = () => {
       <br />
       <button
         onClick={handleJoinRoom}
+        disabled={loading || !username.trim()}
         style={{
           padding: '10px 20px',
           fontSize: '16px',
@@ -36,11 +63,17 @@ const MenuPage = () => {
           color: 'white',
           border: 'none',
           borderRadius: '5px',
-          cursor: 'pointer',
+          cursor: loading ? 'not-allowed' : 'pointer',
         }}
       >
-        Join Room
+        {loading ? 'Loading...' : 'Join Room'}
       </button>
+
+      {loading && (
+        <div style={{ marginTop: '20px' }}>
+          <span>Loading...</span>
+        </div>
+      )}
     </div>
   );
 };
