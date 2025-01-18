@@ -1,12 +1,13 @@
 .map {
-    position: relative;
-    width: 100%; /* or a specific width like '800px' */
-    height: 500px; /* Ensure the map has a height */
-    background-color: blue; /* Blue background */
-    overflow: hidden;
-  }
-  
-  
+  position: fixed; /* Makes the map cover the full screen */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  background-color: blue;
+  overflow: hidden;
+  z-index: 1; /* Lower z-index for the map */
+}
   .player {
     position: absolute;
     transform: translate(-50%, -50%); /* Center the player at the coordinates */
