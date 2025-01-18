@@ -1,0 +1,34 @@
+/* camera.css */
+.camera-container {
+    position: fixed;
+    bottom: 10px;
+    left: 10px; /* Đặt bên trái thay vì bên phải */
+    display: flex;
+    flex-direction: row; /* Đổi từ column thành row để dàn ngang */
+    gap: 10px; /* Khoảng cách giữa các camera */
+  }
+  
+  .camera-placeholder {
+    position: relative;
+    width: 150px; /* Chiều rộng của hình chữ nhật */
+    height: 80px; /* Chiều cao của hình chữ nhật */
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 8px; /* Các góc bo tròn nhẹ */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  .camera-name {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 16px;
+  }
+  

@@ -5,7 +5,13 @@ import usePlayerMovement from '../../hooks/usePlayerMovement';
 import useWebSocket from '../../hooks/useWebSocket';
 import { createStompConfig, WS_ROUTES, WS_TOPICS } from '../../WebSocketConstaint';
 
-const Map = () => {
+const calculateDistance = (pos1, pos2) => {
+  const dx = pos1.x - pos2.x;
+  const dy = pos1.y - pos2.y;
+  return Math.sqrt(dx * dx + dy * dy);
+};
+
+const Map = ({ onNearbyPlayersUpdate }) => {
   const [currentPlayer, setCurrentPlayer] = useState({
     userId: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     name: `Player${Math.floor(100000 + Math.random() * 900000)}`,
@@ -28,8 +34,16 @@ const Map = () => {
   }, [position, sendPosition]);
 
   useEffect(() => {
-    console.log('Users updated:', users);
-  }, [users]);
+    const nearbyPlayers = Object.values(users).filter((player) => {
+      const distance = calculateDistance(position, {
+        x: player.position_x,
+        y: player.position_y,
+      });
+      return distance <= 50 && player.userId !== currentPlayer.userId;
+    });
+
+    onNearbyPlayersUpdate(nearbyPlayers); // Cập nhật danh sách người chơi gần nhau
+  }, [users, position, onNearbyPlayersUpdate]);
 
   return (
     <div className="map">

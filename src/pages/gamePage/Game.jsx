@@ -1,10 +1,16 @@
-import React from 'react'
-import Map from '../../components/game/Map'
+import React, { useState } from 'react';
+import Map from '../../components/game/Map';
+import Camera from '../../components/camera/Camera';
 
 const Game = () => {
-    return (
-        <Map />
-    )
-}
+  const [nearbyPlayers, setNearbyPlayers] = useState([]); 
 
-export default Game
+  return (
+    <>
+      <Camera nearbyPlayers={nearbyPlayers} />
+      <Map onNearbyPlayersUpdate={setNearbyPlayers} />
+    </>
+  );
+};
+
+export default Game;
