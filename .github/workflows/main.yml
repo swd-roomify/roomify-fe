@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - fix/Docker
+      - deploy/develop
   workflow_dispatch:
   
 jobs:
