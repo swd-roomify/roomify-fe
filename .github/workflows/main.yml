@@ -17,10 +17,15 @@ jobs:
       uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Add host to known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H pog.threemusketeer.click >> ~/.ssh/known_hosts
     
     - name: Connect, Pull, and Build Docker
       run: |
-        ssh -o StrictHostKeyChecking=no admin@pog.threemusketeer.click << EOF
+        ssh admin@pog.threemusketeer.click << EOF
           set -e
           cd /home/admin/Documents/roomify/roomify-fe
           git stash || true  # Ignore errors if there are no stashed changes
