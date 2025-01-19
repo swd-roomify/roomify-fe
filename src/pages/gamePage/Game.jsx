@@ -24,7 +24,7 @@ const Game = () => {
     <>
       <Camera nearbyPlayers={nearbyPlayers} />
       <Map onNearbyPlayersUpdate={setNearbyPlayers} user={user} />
-      <Chat />
+      <Chat user={user} />
     </>
   );
 };

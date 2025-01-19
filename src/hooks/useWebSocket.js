@@ -4,6 +4,7 @@ import { Client } from '@stomp/stompjs';
 const useWebSocket = (createStompConfig, routes, topics, user) => {
   const [stompClient, setStompClient] = useState(null);
   const [users, setUsers] = useState({});
+  const [chatMessages, setChatMessages] = useState([]);
 
   useEffect(() => {
     const client = new Client(createStompConfig());
@@ -12,7 +13,6 @@ const useWebSocket = (createStompConfig, routes, topics, user) => {
       setStompClient(client);
 
       if (user) {
-        console.log(`About to connect user ${user.user_id} with the user name ${user.username} to backend websocket`);
         client.publish({
           destination: routes.JOIN,
           body: JSON.stringify({ userId: user.user_id, username: user.username }),
@@ -21,8 +21,12 @@ const useWebSocket = (createStompConfig, routes, topics, user) => {
 
       client.subscribe(topics.POSITIONS, (message) => {
         const userMap = JSON.parse(message.body);
-        console.log('Received user positions:', userMap);
         setUsers(userMap);
+      });
+
+      client.subscribe(topics.CHAT, (message) => {
+        const chatMessage = JSON.parse(message.body);
+        setChatMessages((prev) => [...prev, chatMessage]);
       });
     };
 
@@ -35,10 +39,9 @@ const useWebSocket = (createStompConfig, routes, topics, user) => {
         client.deactivate();
       }
     };
-  }, [createStompConfig, user, routes.JOIN, topics.POSITIONS]);
+  }, [createStompConfig, user, routes, topics]);
 
   const sendPosition = (position) => {
-    console.log(`Send position from user ${user.user_id} `)
     if (stompClient?.active) {
       stompClient.publish({
         destination: routes.MOVE,
@@ -47,9 +50,17 @@ const useWebSocket = (createStompConfig, routes, topics, user) => {
     }
   };
 
-  return { users, sendPosition };
+  const sendChatMessage = (message) => {
+    console.log("Test resource: " + user.user_id);
+    if (stompClient?.active) {
+      stompClient.publish({
+        destination: routes.CHAT,
+        body: JSON.stringify({ userId: user.user_id, username: user.username, message: message }),
+      });
+    }
+  };
+
+  return { users, chatMessages, sendPosition, sendChatMessage };
 };
 
 export default useWebSocket;
-
-

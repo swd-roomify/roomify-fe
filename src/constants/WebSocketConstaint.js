@@ -4,11 +4,13 @@ export const WS_ENDPOINT = import.meta.env.VITE_REACT_APP_WS_URL || 'http://loca
 
 export const WS_TOPICS = {
     POSITIONS: '/topic/positions',
+    CHAT: '/topic/chat',
 };
 
 export const WS_ROUTES = {
     JOIN: '/app/join',
     MOVE: '/app/move',
+    CHAT: '/app/chat',
 };
 
 export const WS_CONFIG = {
@@ -22,7 +24,7 @@ export const WS_CONFIG = {
 
 export const createStompConfig = () => ({
     webSocketFactory: () => {
-        const sockJs = new SockJS('https://pog.threemusketeer.click/ws', null, {
+        const sockJs = new SockJS('http://localhost:8081/ws', null, {
             withCredentials: true,
         });
         return sockJs;
