@@ -1,27 +1,28 @@
 .map {
-  position: fixed; /* Makes the map cover the full screen */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw; /* Full viewport width */
-  height: 100vh; /* Full viewport height */
+  width: 100vw;
+  height: 100vh;
   background-color: blue;
   overflow: hidden;
-  z-index: 1; /* Lower z-index for the map */
+  z-index: -1;
 }
-  .player {
-    position: absolute;
-    transform: translate(-50%, -50%); /* Center the player at the coordinates */
-  }
-  
-  .player-name {
-    text-align: center;
-    color: white;
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
-  
-  .player-character {
-    width: 50px;
-    height: 50px;
-  }
-  
+
+.player {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.player-name {
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.player-character {
+  width: 50px;
+  height: 50px;
+}
