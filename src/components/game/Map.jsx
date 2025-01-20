@@ -51,7 +51,7 @@ const Map = ({ onNearbyPlayersUpdate, user }) => {
             left: player.position_x,
           }}
         >
-          <Player name={player.username} character={player.user_id === user.user_id ? 'character' : 'character2'} />
+          <Player name={player.username} character={player.character} />
         </div>
       ))}
     </div>

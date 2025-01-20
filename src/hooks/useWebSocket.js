@@ -15,7 +15,7 @@ const useWebSocket = (createStompConfig, routes, topics, user) => {
       if (user) {
         client.publish({
           destination: routes.JOIN,
-          body: JSON.stringify({ userId: user.user_id, username: user.username }),
+          body: JSON.stringify({ userId: user.user_id, username: user.username, character: user.character }),
         });
       }
 
@@ -45,7 +45,7 @@ const useWebSocket = (createStompConfig, routes, topics, user) => {
     if (stompClient?.active) {
       stompClient.publish({
         destination: routes.MOVE,
-        body: JSON.stringify({ userId: user.user_id, username: user.username, ...position }),
+        body: JSON.stringify({ userId: user.user_id, username: user.username, character:user.character , ...position }),
       });
     }
   };

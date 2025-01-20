@@ -3,12 +3,15 @@ import { useNavigate } from 'react-router-dom';
 
 const MenuPage = () => {
   const [username, setUsername] = useState('');
-  const [loading, setLoading] = useState(false); 
+  const [selectedCharacter, setSelectedCharacter] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const characters = ['character', 'character2', 'character3', 'character4'];
 
   const handleJoinRoom = async () => {
     if (username.trim()) {
-      setLoading(true); 
+      setLoading(true);
 
       try {
         const response = await fetch('http://localhost:8081/api/user/generate', {
@@ -18,6 +21,7 @@ const MenuPage = () => {
           },
           body: JSON.stringify({
             username: username,
+            character: selectedCharacter,
           }),
         });
 
@@ -25,8 +29,8 @@ const MenuPage = () => {
           throw new Error('Failed to generate user');
         }
 
-        const user = await response.json(); 
-        console.log(user); 
+        const user = await response.json();
+        console.log(user);
 
         navigate('/demo', { state: { user } });
       } catch (error) {
@@ -53,6 +57,26 @@ const MenuPage = () => {
         }}
       />
       <br />
+      <div style={{ marginBottom: '20px' }}>
+        <h3>Choose a Character:</h3>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+          {characters.map((char) => (
+            <img
+              key={char}
+              src={`/assets/sprites/${char}.png`}
+              alt={char}
+              onClick={() => setSelectedCharacter(char)}
+              style={{
+                width: '80px',
+                height: '80px',
+                border: selectedCharacter === char ? '3px solid #4CAF50' : '2px solid transparent',
+                borderRadius: '5px',
+                cursor: 'pointer',
+              }}
+            />
+          ))}
+        </div>
+      </div>
       <button
         onClick={handleJoinRoom}
         disabled={loading || !username.trim()}
