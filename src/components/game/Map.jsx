@@ -15,7 +15,8 @@ const Map = ({ onNearbyPlayersUpdate, user }) => {
   const position = usePlayerMovement({ x: 300, y: 200 });
   const prevPositionRef = useRef(position);
 
-  const { users, sendPosition } = useWebSocket(createStompConfig, WS_ROUTES, WS_TOPICS, user);
+  const { users, chatMessages, sendPosition } = useWebSocket(createStompConfig, WS_ROUTES, WS_TOPICS, user);
+  const [chatBubbles, setChatBubbles] = useState({});
 
   useEffect(() => {
     if (
@@ -39,6 +40,23 @@ const Map = ({ onNearbyPlayersUpdate, user }) => {
     onNearbyPlayersUpdate(nearbyPlayers);
   }, [users, position, onNearbyPlayersUpdate]);
 
+  useEffect(() => {
+    if (chatMessages.length) {
+      const latestMessage = chatMessages[chatMessages.length - 1];
+      setChatBubbles((prev) => ({
+        ...prev,
+        [latestMessage.userId]: latestMessage.message,
+      }));
+
+      setTimeout(() => {
+        setChatBubbles((prev) => {
+          const { [latestMessage.userId]: _, ...rest } = prev;
+          return rest;
+        });
+      }, 5000);
+    }
+  }, [chatMessages]);
+
   return (
     <div className="map">
       {Object.values(users).map((player) => (
@@ -52,6 +70,11 @@ const Map = ({ onNearbyPlayersUpdate, user }) => {
           }}
         >
           <Player name={player.username} character={player.character} />
+          {chatBubbles[player.user_id] && (
+            <div className="chat-bubble">
+              {chatBubbles[player.user_id]}
+            </div>
+          )}
         </div>
       ))}
     </div>
