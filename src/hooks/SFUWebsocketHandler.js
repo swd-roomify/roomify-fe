@@ -1,318 +1,369 @@
-import { useEffect, useRef, useState } from 'react';
-import { Device } from 'mediasoup-client';
-import io from 'socket.io-client';
-import mediasoupServerConstants from '../constants/mediasoupServerConstants';
-import mediasoupErrorMessage from '../constants/mediasoupErrorMessage';
-import { payload, verifyPayload } from './SFUPlayloadUtils';
+import { useEffect, useRef, useState } from "react";
+import { Device } from "mediasoup-client";
+import io from "socket.io-client";
+import mediasoupServerConstants from "../constants/mediasoupServerConstants";
+import mediasoupErrorMessage from "../constants/mediasoupErrorMessage";
+import { payload, verifyPayload } from "./SFUPlayloadUtils";
+import {
+  clearChildrenFromCameraPlaceholder,
+  createMediaElement,
+  handleCloseProducerTransport,
+} from "../utils/EventHandler";
 
-export const useMediasoup = () => {
-    const videoRef = useRef(null);
-    const socketRef = useRef(null);
-    const deviceRef = useRef(null);
-    const producerRef = useRef(null);
-    const transportRef = useRef(null);
-    const consumerTransportRef = useRef(null);
+const cameraPlaceholder = "camera-placeholder";
 
-    const [user_id, setUser_id] = useState('');
-    const [isCamera, setIsCamera] = useState(false);
-    const [publishStatus, setPublishStatus] = useState('');
+const useMediasoup = () => {
+  const count = useRef(0);
 
-    useEffect(() => {
-        if (!user_id) return;
+  const videoRef = useRef(null);
+  const socketRef = useRef(null);
+  const deviceRef = useRef(null);
+  const producerRef = useRef(null);
+  const transportRef = useRef(null);
+  const nearbyPlayersRef = useRef([]);
+  const consumerTransportRef = useRef(null);
 
-        socketRef.current = io.connect(mediasoupServerConstants.sfuServerUrl);
+  const [user_id, setUser_id] = useState("");
+  const [isCamera, setIsCamera] = useState(false);
 
-        socketRef.current.onAny(async (event, data) => {
-            if (!await verifyPayload(data)) {
-                console.log('Invalid payload:', data);
-                return;
-            }
+  useEffect(() => {
+    if (!user_id) return;
 
-            const payload = JSON.parse(data);
+    socketRef.current = io(mediasoupServerConstants.sfuServerUrl);
 
-            switch (event) {
-                case mediasoupServerConstants.routerRtpCapabilities:
-                    loadDevice(payload);
-                    break;
-                case mediasoupServerConstants.subTransportCreated:
-                    handleSubTransportCreated(payload);
-                    break;
-                case mediasoupServerConstants.producerTransportCreated:
-                    handleProducerTransportCreated(payload);
-                    break;
-                case mediasoupServerConstants.subscribed:
-                    onSubscribed(payload);
-                    break;
-                case mediasoupServerConstants.serverLog:
-                    // TO DO
-                    // Better enhance this next time
-                    // console.log('Server log:', ...args);
-                    break;
-                case mediasoupServerConstants.closeProducerTransport:
-                    handleCloseProducerTransport(payload);
-                    break;
-                case mediasoupServerConstants.producerId:
-                    console.log('Producer ID:', payload);
-                    break;
-                case mediasoupServerConstants.err:
-                    console.error(mediasoupErrorMessage.unknow, payload);
-                    setPublishStatus(mediasoupErrorMessage.unknow);
-                    break;
-                default:
-                    console.warn(mediasoupErrorMessage.unknowServerMessage + event);
-                    break;
-            }
-        });
+    socketRef.current.onAny(async (event, data) => {
+      if (!(await verifyPayload(data))) {
+        console.log("Invalid payload:", data);
+        return;
+      }
 
-        return () => {
-            if (socketRef.current) {
-                socketRef.current.disconnect();
-            }
-        };
-    }, [user_id]);
+      const payload = JSON.parse(data);
 
-    const send = async (type, data) => {
-        socketRef.current.emit(type, data ? await payload(data) : undefined);
+      switch (event) {
+        case mediasoupServerConstants.routerRtpCapabilities:
+          loadDevice(payload);
+          break;
+        case mediasoupServerConstants.subTransportCreated:
+          handleSubTransportCreated(payload);
+          break;
+        case mediasoupServerConstants.producerTransportCreated:
+          handleProducerTransportCreated(payload);
+          break;
+        case mediasoupServerConstants.subscribed:
+          onSubscribed(payload);
+          break;
+        case mediasoupServerConstants.serverLog:
+          // TO DO
+          // Better enhance this next time
+          // console.log('Server log:', ...args);
+          break;
+        case mediasoupServerConstants.closeProducerTransport:
+          handleCloseProducerTransport(payload);
+          break;
+        case mediasoupServerConstants.producerId:
+          const [{ kind, producerId }] = payload;
+          console.log("Producer   ", kind, producerId);
+          break;
+        case mediasoupServerConstants.err:
+          console.error(mediasoupErrorMessage.unknow, payload);
+          break;
+        default:
+          console.warn(mediasoupErrorMessage.unknowServerMessage + event);
+          break;
+      }
+    });
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
     };
+  }, [user_id]);
 
-    const loadDevice = async (payload) => {
+  const send = async (type, data) => {
+    if (!socketRef.current) {
+      console.error("Socket is not connected, trying to reconnect");
+    } else if (socketRef.current.connected && deviceRef.current !== null) {
+      socketRef.current.emit(type, data ? await payload(data) : undefined);
+    }
+  };
+
+  const loadDevice = async (payload) => {
+    try {
+      const [{ codecs, headerExtensions }] = payload;
+      const routerRtpCapabilities = { codecs, headerExtensions };
+
+      const newDevice = new Device();
+      await newDevice.load({ routerRtpCapabilities });
+      deviceRef.current = newDevice;
+    } catch (error) {
+      console.error(mediasoupErrorMessage.loadDeviceFailed, error);
+    }
+  };
+
+  const consume = async (payload) => {
+    const { userId, players, othersContainerRef } = payload;
+    othersContainerRef.current = othersContainerRef;
+    nearbyPlayersRef.current = players;
+    await send(mediasoupServerConstants.createConsumerTransport, { userId });
+  };
+
+  // open camera
+  const produce = async (parameters) => {
+    if (isCamera) {
+      videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+      const streamId = videoRef.current.srcObject.id;
+      const { userId } = parameters;
+
+      send(mediasoupServerConstants.closeProducerTransport, {
+        userId,
+        streamId,
+      });
+      setIsCamera(false);
+    } else {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      const streamId = stream.id;
+      const { userId } = parameters;
+
+      await send(mediasoupServerConstants.createProducerTransport, {
+        userId,
+        streamId,
+      });
+      videoRef.current.srcObject = stream;
+      setIsCamera(true);
+    }
+  };
+
+  const handleSubTransportCreated = async (payload) => {
+    const transportInfo = payload[0];
+    const [{ id, iceParameters, iceCandidates, dtlsParameters }] =
+      transportInfo;
+
+    const transport = deviceRef.current.createRecvTransport({
+      id,
+      iceParameters,
+      iceCandidates,
+      dtlsParameters,
+    });
+
+    handleConsumer();
+
+    transport.on(
+      mediasoupServerConstants.connect,
+      async ({ dtlsParameters }, callback, errback) => {
         try {
-            const [{ codecs, headerExtensions }] = payload;
-            const routerRtpCapabilities = { codecs, headerExtensions };
-
-            const newDevice = new Device();
-            await newDevice.load({ routerRtpCapabilities });
-            deviceRef.current = newDevice;
+          send(mediasoupServerConstants.connectConsumerTransport, {
+            dtlsParameters,
+          });
+          callback();
         } catch (error) {
-            console.error(mediasoupErrorMessage.loadDeviceFailed, error);
-            setPublishStatus(mediasoupErrorMessage.loadDeviceFailed);
+          errback(error);
         }
-    };
+      }
+    );
 
-    const handleCloseProducerTransport = async ({ user_id }) => {
-        const mediaElement = document.getElementById('remoteVideo_' + user_id);
-        if (mediaElement) {
-            mediaElement.parentNode.removeChild(mediaElement);
+    transport.on(
+      mediasoupServerConstants.connectionstatechange,
+      async (state) => {
+        switch (state) {
+          case mediasoupServerConstants.connecting:
+            // console.log('Consumer transport connecting...');
+            break;
+          case mediasoupServerConstants.connected:
+          // console.log('Consumer transport connected');
+          case constants.failed:
+            // console.error('Consumer transport failed');
+            transport.close();
+            break;
+          default:
+            break;
         }
-    };
+      }
+    );
 
-    const handleSubTransportCreated = async (payload) => {
-        const transportInfo = payload[0];
-        const [{ id, iceParameters, iceCandidates, dtlsParameters }] = transportInfo;
+    consumerTransportRef.current = transport;
+  };
 
-        const transport = deviceRef.current.createRecvTransport({
-            id,
-            iceParameters,
-            iceCandidates,
-            dtlsParameters
-        });
+  const handleConsumer = async () => {
+    const rtpCapabilities = deviceRef.current.rtpCapabilities;
+    send(mediasoupServerConstants.consume, {
+      rtpCapabilities,
+      nearbyPlayers: nearbyPlayersRef.current,
+    });
+  };
 
-        handleConsumer();
+  const handleProducerTransportCreated = async (payload) => {
+    console.log("ICE", payload);
 
-        transport.on(mediasoupServerConstants.connect, async ({ dtlsParameters }, callback, errback) => {
-            try {
-                send(mediasoupServerConstants.connectConsumerTransport, { dtlsParameters });
-                callback();
-            } catch (error) {
-                errback(error);
-            }
-        });
+    const [{ id, iceParameters, iceCandidates, dtlsParameters }] = payload;
+    const transport = deviceRef.current.createSendTransport({
+      id,
+      iceParameters,
+      iceCandidates,
+      dtlsParameters,
+    });
+    
+    transportRef.current = transport;
 
-        transport.on(mediasoupServerConstants.connectionstatechange, async (state) => {
-            switch (state) {
-                case mediasoupServerConstants.connecting:
-                    // console.log('Consumer transport connecting...');
-                    break;
-                case mediasoupServerConstants.connected:
-                    // console.log('Consumer transport connected');
-                    break;
-                case mediasoupServerConstants.failed:
-                    // console.error('Consumer transport failed');
-                    transport.close();
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        consumerTransportRef.current = transport;
-    };
-
-    const handleConsumer = async () => {
-        const rtpCapabilities = deviceRef.current.rtpCapabilities;
-        send(mediasoupServerConstants.consume, { rtpCapabilities });
-    };
-
-    const subscribe = async () => {
-        send(mediasoupServerConstants.createConsumerTransport);
-    };
-
-    const openCamera = async () => {
-        if (isCamera) {
-            // user press on camera button again to close camera
-            videoRef.current.srcObject.getTracks().forEach(track => track.stop());
-            setIsCamera(false);
-            send(mediasoupServerConstants.closeProducerTransport, videoRef.current.srcObject.id);
-            setPublishStatus('');
-        } else {
-            // open camera
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            const userId = stream.id;
-            videoRef.current.srcObject = stream;
-            setIsCamera(true);
-
-            await send(mediasoupServerConstants.createProducerTransport, userId);
-            setPublishStatus('Publishing...');
-        }
-    };
-
-    const handleProducerTransportCreated = async (payload) => {
-        const [{ id, iceParameters, iceCandidates, dtlsParameters }] = payload;
-        const transport = deviceRef.current.createSendTransport({
-            id,
-            iceParameters,
-            iceCandidates,
-            dtlsParameters
-        });
-
-        transportRef.current = transport;
-
-        transport.on(mediasoupServerConstants.connect, async ({ dtlsParameters }, callback, errback) => {
-            try {
-                await send(mediasoupServerConstants.transportConnect, {
-                    userId: videoRef.current.srcObject.id,
-                    dtlsParameters
-                });
-                callback({ id });
-            } catch (error) {
-                errback(error);
-            }
-        });
-
-        transport.on(mediasoupServerConstants.produce, async ({ kind, rtpParameters }, callback, errback) => {
-            try {
-                const response = await new Promise((resolve, reject) => {
-                    send(mediasoupServerConstants.transportProduce, {
-                        userId: videoRef.current.srcObject.id,
-                        kind,
-                        rtpParameters
-                    });
-
-                    socketRef.current.once(mediasoupServerConstants.producerId, (data) => resolve(JSON.parse(data)));
-                });
-        
-                callback({ id: response.producerId });
-            } catch (error) {
-                errback(error);
-            }
-        });
-
+    transport.on(
+      mediasoupServerConstants.connect,
+      async ({ dtlsParameters }, callback, errback) => {
         try {
-            const stream = videoRef.current.srcObject;
-            
-            if (!stream) {
-                throw new Error('No media stream available');
-            }
-        
-            const videoTrack = stream.getVideoTracks()[0];
-            const audioTrack = stream.getAudioTracks()[0];
-        
-            if (!videoTrack) {
-                throw new Error('No video track available');
-            }
-            if (!audioTrack) {
-                throw new Error('No audio track available');
-            }
-
-            const videoProducer = await transport.produce({
-                track: videoTrack,
-                encodings: [{ maxBitrate: 900000 }],
-            });
-            
-            const audioProducer = await transport.produce({
-                track: audioTrack,
-            });
-        
-            if (!videoProducer || !audioProducer) {
-                throw new Error('Failed to create producers');
-            }
-            
-            producerRef.current = { videoProducer, audioProducer };
-            console.log('Producer transport connected', producerRef.current);
+          await send(mediasoupServerConstants.transportConnect, {
+            streamId: videoRef.current.srcObject.id,
+            dtlsParameters,
+          });
+          callback({ id });
         } catch (error) {
-            console.error('Detailed error:', {
-                name: error.name,
-                message: error.message,
-                stack: error.stack
+          errback(error);
+        }
+      }
+    );
+
+    transport.on(
+      mediasoupServerConstants.produce,
+      async ({ kind, rtpParameters }, callback, errback) => {
+        try {
+          const response = await new Promise((resolve, reject) => {
+            send(mediasoupServerConstants.transportProduce, {
+              streamId: videoRef.current.srcObject.id,
+              kind,
+              rtpParameters,
             });
-            setPublishStatus(mediasoupErrorMessage.unknow);
+
+            socketRef.current.once(
+              mediasoupServerConstants.producerId,
+              (data) => resolve(JSON.parse(data))
+            );
+          });
+
+          callback({ id: response.producerId });
+        } catch (error) {
+          errback(error);
         }
-    };
+      }
+    );
 
-    const onSubscribed = async (payload) => {
-        let consumersList = [];
-        consumersList = payload;
-
-        if (payload.length == 0) {
-            console.log('No consumer found');
-            return;
+    await transport.on(
+        "icegatheringstatechange",
+        async ({ icegatheringstatechange }, callback, errback) => {
+          try {
+            console.log("icegatheringstatechange", icegatheringstatechange);
+          } catch (error) {
+            errback(error);
+          }
         }
+      );
 
-        for (const consumerInfo of consumersList) {
-            for (const key in consumerInfo) {
-                try {
-                    const { id, producerId, kind, rtpParameters } = consumerInfo[key];
-    
-                    const codecOptions = {};
-                    const consumer = await consumerTransportRef.current.consume({
-                        id,
-                        producerId,
-                        kind,
-                        rtpParameters,
-                        codecOptions,
-                    });
-    
-                    console.log('Consumer created:', consumer);
-    
-                    const stream = new MediaStream();
-                    stream.addTrack(consumer.track);
-    
-                    if (consumer.kind === "audio") {
-                        const audioElement = document.createElement("audio");
-                        audioElement.id = `remoteVideo_${user_id}`;
-                        audioElement.srcObject = stream;
-                        audioElement.autoplay = true;
-                        audioElement.controls = false;
-                        audioElement.style.display = "none";
-                        document.body.appendChild(audioElement);
-                    } else if (consumer.kind === "video") {
-                        const videoElement = document.createElement("video");
-                        videoElement.id = `remoteVideo_${user_id}`;
-                        videoElement.srcObject = stream;
-                        videoElement.autoplay = true;
-                        videoElement.playsInline = true;
-                        videoElement.style.width = "340px";
-                        videoElement.style.height = "180px";
-    
-                        const container = document.getElementById("remoteVideosContainer");
-                        if (container) {
-                            container.appendChild(videoElement);
-                        }
-                    }
-                } catch (error) {
-                    console.error(mediasoupErrorMessage.unknow, error);
-                }
-            }
+    await transport.on(
+    "connectionstatechange",
+    async ({ connectionstatechange }, callback, errback) => {
+        try {
+        console.log("connectionstatechange", connectionstatechange);
+        } catch (error) {
+        errback(error);
         }
-    };
+    }
+    );
 
-    return {
-        videoRef,
-        user_id,
-        setUser_id,
-        isCamera,
-        publishStatus,
-        openCamera,
-        subscribe
-    };
+    await transport.on("close", async (callback, errback) => {
+        console.log("close");
+    });
+
+    try {
+      const stream = videoRef.current.srcObject;
+
+      if (!stream) {
+        throw new Error("No media stream available");
+      }
+
+      const videoTrack = stream.getVideoTracks()[0];
+      const audioTrack = stream.getAudioTracks()[0];
+
+      if (!videoTrack) {
+        throw new Error("No video track available");
+      }
+      if (!audioTrack) {
+        throw new Error("No audio track available");
+      }
+
+      const videoProducer = await transport.produce({
+        track: videoTrack,
+        encodings: [{ maxBitrate: 900000 }],
+      });
+
+      const audioProducer = await transport.produce({
+        track: audioTrack,
+      });
+
+      if (!videoProducer || !audioProducer) {
+        throw new Error("Failed to create producers");
+      }
+
+      producerRef.current = { videoProducer, audioProducer };
+      console.log("Producer transport connected", producerRef.current);
+    } catch (error) {
+      console.error("Detailed error:", {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      });
+    }
+  };
+
+  const onSubscribed = async (payload) => {
+    let consumersList = [];
+    consumersList = payload;
+
+    if (consumersList.length == 0) {
+      console.log("Clear child");
+      clearChildrenFromCameraPlaceholder();
+      return;
+    }
+
+    for (const consumerInfo of consumersList) {
+      for (const key in consumerInfo) {
+        try {
+          const { id, producerId, kind, rtpParameters } = consumerInfo[key];
+
+          const codecOptions = {};
+          const consumer = await consumerTransportRef.current.consume({
+            id,
+            producerId,
+            kind,
+            rtpParameters,
+            codecOptions,
+          });
+
+          const stream = new MediaStream();
+          stream.addTrack(consumer.track);
+
+          createMediaElement(kind, stream, user_id);
+        } catch (error) {
+          console.error(mediasoupErrorMessage.unknow, error);
+        }
+      }
+    }
+  };
+
+  const disconnect = async (payload) => {
+    const { userId } = payload;
+    if (socketRef.current) {
+      await send(mediasoupServerConstants.disconnect, { userId });
+      socketRef.current.disconnect();
+    }
+  };
+
+  return {
+    videoRef,
+    setUser_id,
+    produce,
+    consume,
+    disconnect,
+  };
 };
+
+export default useMediasoup;

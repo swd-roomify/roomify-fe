@@ -14,7 +14,7 @@ const MenuPage = () => {
       setLoading(true);
 
       try {
-        const response = await fetch('http://localhost:8081/api/user/generate', {
+        const response = await fetch('http://192.168.1.8:8081/api/user/generate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ const MenuPage = () => {
         }
 
         const user = await response.json();
-        console.log(user);
+        // console.log(user);
 
         navigate('/demo', { state: { user } });
       } catch (error) {
