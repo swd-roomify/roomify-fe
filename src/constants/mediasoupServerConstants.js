@@ -12,7 +12,7 @@ const mediasoupServerConstants = {
     producerTransportCreated: "producer-transport-created",
     closeProducerTransport: "close-producer-transport",
     producerId: "producer-id",
-
+    otherUsersDisconnect: "other-users-disconnect",
 
     // consumer
     createConsumerTransport: "create-consumer-transport",

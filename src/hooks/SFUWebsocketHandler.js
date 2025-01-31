@@ -5,7 +5,6 @@ import mediasoupServerConstants from "../constants/mediasoupServerConstants";
 import mediasoupErrorMessage from "../constants/mediasoupErrorMessage";
 import { payload, verifyPayload } from "./SFUPlayloadUtils";
 import {
-  clearChildrenFromCameraPlaceholder,
   createMediaElement,
   handleCloseProducerTransport,
 } from "../utils/EventHandler";
@@ -20,7 +19,7 @@ const useMediasoup = () => {
   const deviceRef = useRef(null);
   const producerRef = useRef(null);
   const transportRef = useRef(null);
-  const nearbyPlayersRef = useRef([]);
+  const newPlayersRef = useRef([]);
   const consumerTransportRef = useRef(null);
 
   const [user_id, setUser_id] = useState("");
@@ -61,8 +60,11 @@ const useMediasoup = () => {
           handleCloseProducerTransport(payload);
           break;
         case mediasoupServerConstants.producerId:
-          const [{ kind, producerId }] = payload;
-          console.log("Producer   ", kind, producerId);
+          // const [{ kind, producerId }] = payload;
+          // console.log("Producer   ", kind, producerId);
+          break;
+        case mediasoupServerConstants.otherUsersDisconnect:
+          otherUsersDisconnect(payload);
           break;
         case mediasoupServerConstants.err:
           console.error(mediasoupErrorMessage.unknow, payload);
@@ -102,24 +104,25 @@ const useMediasoup = () => {
   };
 
   const consume = async (payload) => {
-    const { userId, players, othersContainerRef } = payload;
+    const { userId, newPlayers, removedPlayers, othersContainerRef } = payload;
     othersContainerRef.current = othersContainerRef;
-    nearbyPlayersRef.current = players;
-    await send(mediasoupServerConstants.createConsumerTransport, { userId, players });
+    newPlayersRef.current = newPlayers;
+    await send(mediasoupServerConstants.createConsumerTransport, { userId, newPlayers, removedPlayers });
   };
 
   // open camera
   const produce = async (parameters) => {
     if (isCamera) {
-      videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
-      const streamId = videoRef.current.srcObject.id;
-      const { userId } = parameters;
+      console.log("Not yet! Still under development");
+      // videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+      // const streamId = videoRef.current.srcObject.id;
+      // const { userId } = parameters;
 
-      send(mediasoupServerConstants.closeProducerTransport, {
-        userId,
-        streamId,
-      });
-      setIsCamera(false);
+      // send(mediasoupServerConstants.closeProducerTransport, {
+      //   userId,
+      //   streamId,
+      // });
+      // setIsCamera(false);
     } else {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -175,7 +178,7 @@ const useMediasoup = () => {
           case mediasoupServerConstants.connected:
             console.log('Consumer transport connected');
             break;
-          case constants.failed:
+          case mediasoupServerConstants.failed:
             console.error('Consumer transport failed');
             transport.close();
             break;
@@ -192,7 +195,7 @@ const useMediasoup = () => {
     const rtpCapabilities = deviceRef.current.rtpCapabilities;
     send(mediasoupServerConstants.consume, {
       rtpCapabilities,
-      nearbyPlayers: nearbyPlayersRef.current,
+      nearbyPlayers: newPlayersRef.current,
     });
   };
 
@@ -319,16 +322,10 @@ const useMediasoup = () => {
     let consumersList = [];
     consumersList = payload;
 
-    if (consumersList.length == 0) {
-      console.log("Clear child");
-      clearChildrenFromCameraPlaceholder();
-      return;
-    }
-
     for (const consumerInfo of consumersList) {
       for (const key in consumerInfo) {
         try {
-          const { id, producerId, kind, rtpParameters } = consumerInfo[key];
+          const { userId, id, producerId, kind, rtpParameters } = consumerInfo[key];
 
           const consumer = await consumerTransportRef.current.consume({
             id,
@@ -338,7 +335,7 @@ const useMediasoup = () => {
           });
 
           const { track } = consumer;
-          createMediaElement(kind, track, user_id);
+          createMediaElement(kind, track, userId);
         } catch (error) {
           console.error(mediasoupErrorMessage.unknow, error);
         }
@@ -346,12 +343,14 @@ const useMediasoup = () => {
     }
   };
 
+  const otherUsersDisconnect = async (payload) => {
+    const [{ userId }] = payload;
+    await handleCloseProducerTransport({ userId });
+  }
+
   const disconnect = async (payload) => {
     const { userId } = payload;
-    if (socketRef.current) {
-      await send(mediasoupServerConstants.disconnect, { userId });
-      socketRef.current.disconnect();
-    }
+    await send(mediasoupServerConstants.disconnect, { userId });
   };
 
   return {

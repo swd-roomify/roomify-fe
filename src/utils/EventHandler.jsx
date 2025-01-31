@@ -42,15 +42,6 @@ const useNavigationHandlers = (handleCleanup) => {
   }, [handleCleanup]);
 };
 
-function clearChildrenFromCameraPlaceholder() {
-  const cameraPlaceholder = document.getElementById(cameraPlaceholder);
-  if (cameraPlaceholder) {
-      while (cameraPlaceholder.firstChild) {
-          cameraPlaceholder.removeChild(cameraPlaceholder.firstChild);
-      }
-  }
-}
-
 function createMediaElement(kind, track, userId) {
   let mediaElement;
   const container = document.getElementById(cameraPlaceholder);
@@ -81,11 +72,12 @@ function createMediaElement(kind, track, userId) {
 }
 
 // Remove the video and audio elements from the camera placeholder frontend
-const handleCloseProducerTransport = async ({ user_id }) => {
+const handleCloseProducerTransport = async ({ userId }) => {
+  console.log("Remove media element for user:", userId);
   const mediaElement = document.getElementById(cameraPlaceholder);
 
   ['video', 'audio'].forEach((type) => {
-      const element = document.getElementById(`remote${type.charAt(0).toUpperCase() + type.slice(1)}_${user_id}`);
+      const element = document.getElementById(`remote${type.charAt(0).toUpperCase() + type.slice(1)}_${userId}`);
       if (element && element.parentNode === mediaElement) {
           mediaElement.removeChild(element);
       }
@@ -93,4 +85,4 @@ const handleCloseProducerTransport = async ({ user_id }) => {
 };
 
 export default useNavigationHandlers;
-export { clearChildrenFromCameraPlaceholder, createMediaElement, handleCloseProducerTransport };
+export { createMediaElement, handleCloseProducerTransport };

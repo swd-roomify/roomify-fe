@@ -41,27 +41,25 @@ const Camera = ({ nearbyPlayers, user }) => {
   useEffect(() => {
     const fetchAndUpdateProducers = async () => {
       const producerIds = new Set(producers.map((p) => p.user_id));
-      const hasNewPlayers = nearbyPlayers.some(
-        (newPlayer) => !producerIds.has(newPlayer.user_id)
+      const newPlayers = nearbyPlayers.filter((p) => !producerIds.has(p.user_id));
+      const removedPlayers = producers.filter(
+        (p) => !nearbyPlayers.some((player) => player.user_id === p.user_id)
       );
-      const hasRemovedPlayers = producers.some(
-        (producer) =>
-          !nearbyPlayers.some((player) => player.user_id === producer.user_id)
-      );
-
-      if (hasNewPlayers || hasRemovedPlayers) {
-        console.log("Updating producers list.", nearbyPlayers);
+  
+      if (newPlayers.length > 0 || removedPlayers.length > 0) {
+        console.log("Updating producers list.", { newPlayers, removedPlayers });
         await consume({
           userId: user.user_id,
-          players: nearbyPlayers,
+          newPlayers,
+          removedPlayers,
           othersContainerRef,
         });
         setProducers(nearbyPlayers);
       }
     };
-
+  
     fetchAndUpdateProducers();
-  }, [nearbyPlayers]);
+  }, [nearbyPlayers, producers, user]);
 
   const handleCleanup = () => {
     console.log("Performing cleanup before page unload...");
@@ -72,6 +70,10 @@ const Camera = ({ nearbyPlayers, user }) => {
 
   return (
     <div className="camera-container">
+      <div value></div>
+      <div className="user-id-display">
+        User ID: {user.user_id}
+      </div>
       <button
         onClick={startProducing}
         className="bg-blue-500 text-white px-4 py-2 rounded"
