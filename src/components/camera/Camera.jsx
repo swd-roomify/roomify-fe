@@ -38,38 +38,30 @@ const Camera = ({ nearbyPlayers, user }) => {
     }
   };
 
-  const view = async () => {
-    await consume({
-      userId: user.user_id,
-      // players: nearbyPlayers,
-      othersContainerRef,
-    });
-  };
+  useEffect(() => {
+    const fetchAndUpdateProducers = async () => {
+      const producerIds = new Set(producers.map((p) => p.user_id));
+      const hasNewPlayers = nearbyPlayers.some(
+        (newPlayer) => !producerIds.has(newPlayer.user_id)
+      );
+      const hasRemovedPlayers = producers.some(
+        (producer) =>
+          !nearbyPlayers.some((player) => player.user_id === producer.user_id)
+      );
 
-  // useEffect(() => {
-  //   const fetchAndUpdateProducers = async () => {
-  //     const producerIds = new Set(producers.map((p) => p.user_id));
-  //     const hasNewPlayers = nearbyPlayers.some(
-  //       (newPlayer) => !producerIds.has(newPlayer.user_id)
-  //     );
-  //     const hasRemovedPlayers = producers.some(
-  //       (producer) =>
-  //         !nearbyPlayers.some((player) => player.user_id === producer.user_id)
-  //     );
+      if (hasNewPlayers || hasRemovedPlayers) {
+        console.log("Updating producers list.", nearbyPlayers);
+        await consume({
+          userId: user.user_id,
+          players: nearbyPlayers,
+          othersContainerRef,
+        });
+        setProducers(nearbyPlayers);
+      }
+    };
 
-  //     if (hasNewPlayers || hasRemovedPlayers) {
-  //       console.log("Updating producers list.");
-  //       await consume({
-  //         userId: user.user_id,
-  //         players: nearbyPlayers,
-  //         othersContainerRef,
-  //       });
-  //       setProducers(nearbyPlayers);
-  //     }
-  //   };
-
-  //   fetchAndUpdateProducers();
-  // }, [nearbyPlayers]);
+    fetchAndUpdateProducers();
+  }, [nearbyPlayers]);
 
   const handleCleanup = () => {
     console.log("Performing cleanup before page unload...");
@@ -84,11 +76,6 @@ const Camera = ({ nearbyPlayers, user }) => {
         onClick={startProducing}
         className="bg-blue-500 text-white px-4 py-2 rounded"
       >Camera
-      </button>
-      <button
-        onClick={view}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >View
       </button>
       <video
         ref={videoRef}

@@ -105,7 +105,7 @@ const useMediasoup = () => {
     const { userId, players, othersContainerRef } = payload;
     othersContainerRef.current = othersContainerRef;
     nearbyPlayersRef.current = players;
-    await send(mediasoupServerConstants.createConsumerTransport, { userId });
+    await send(mediasoupServerConstants.createConsumerTransport, { userId, players });
   };
 
   // open camera
@@ -170,12 +170,13 @@ const useMediasoup = () => {
       async (state) => {
         switch (state) {
           case mediasoupServerConstants.connecting:
-            // console.log('Consumer transport connecting...');
+            console.log('Consumer transport connecting...');
             break;
           case mediasoupServerConstants.connected:
-          // console.log('Consumer transport connected');
+            console.log('Consumer transport connected');
+            break;
           case constants.failed:
-            // console.error('Consumer transport failed');
+            console.error('Consumer transport failed');
             transport.close();
             break;
           default:
@@ -205,7 +206,7 @@ const useMediasoup = () => {
       iceCandidates,
       dtlsParameters,
     });
-    
+
     transportRef.current = transport;
 
     transport.on(
@@ -248,29 +249,29 @@ const useMediasoup = () => {
     );
 
     await transport.on(
-        "icegatheringstatechange",
-        async ({ icegatheringstatechange }, callback, errback) => {
-          try {
-            console.log("icegatheringstatechange", icegatheringstatechange);
-          } catch (error) {
-            errback(error);
-          }
+      "icegatheringstatechange",
+      async ({ iceGatheringState }, callback, errback) => {
+        try {
+          console.log("iceGatheringState", iceGatheringState);
+        } catch (error) {
+          errback(error);
         }
-      );
+      }
+    );
 
     await transport.on(
-    "connectionstatechange",
-    async ({ connectionstatechange }, callback, errback) => {
+      "connectionstatechange",
+      async ({ connectionState }, callback, errback) => {
         try {
-        console.log("connectionstatechange", connectionstatechange);
+          console.log("connectionState", connectionState);
         } catch (error) {
-        errback(error);
+          errback(error);
         }
-    }
+      }
     );
 
     await transport.on("close", async (callback, errback) => {
-        console.log("close");
+      console.log("close");
     });
 
     try {
@@ -329,19 +330,15 @@ const useMediasoup = () => {
         try {
           const { id, producerId, kind, rtpParameters } = consumerInfo[key];
 
-          const codecOptions = {};
           const consumer = await consumerTransportRef.current.consume({
             id,
             producerId,
             kind,
             rtpParameters,
-            codecOptions,
           });
 
-          const stream = new MediaStream();
-          stream.addTrack(consumer.track);
-
-          createMediaElement(kind, stream, user_id);
+          const { track } = consumer;
+          createMediaElement(kind, track, user_id);
         } catch (error) {
           console.error(mediasoupErrorMessage.unknow, error);
         }

@@ -51,8 +51,7 @@ function clearChildrenFromCameraPlaceholder() {
   }
 }
 
-function createMediaElement(kind, stream, userId) {
-  console.log("Stream", stream.active);
+function createMediaElement(kind, track, userId) {
   let mediaElement;
   const container = document.getElementById(cameraPlaceholder);
   if (!container) {
@@ -63,15 +62,14 @@ function createMediaElement(kind, stream, userId) {
   if (kind === "audio") {
     mediaElement = document.createElement("audio");
     mediaElement.id = `remoteAudio_${userId}`;
-    mediaElement.srcObject = stream;
+    mediaElement.srcObject = new MediaStream([track]);
     mediaElement.autoplay = true;
     mediaElement.controls = false;
     mediaElement.style.display = "none";
   } else if (kind === "video") {
-    console.log("Video tracks:", stream.getVideoTracks());
     mediaElement = document.createElement("video");
     mediaElement.id = `remoteVideo_${userId}`;
-    mediaElement.srcObject = stream;
+    mediaElement.srcObject = new MediaStream([track]);
     mediaElement.autoplay = true;
     mediaElement.playsInline = true;
     mediaElement.muted = true;

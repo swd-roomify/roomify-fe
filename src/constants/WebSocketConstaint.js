@@ -2,7 +2,7 @@ import SockJS from 'sockjs-client';
 
 
 
-export const WS_ENDPOINT = import.meta.env.VITE_REACT_APP_WS_URL || 'http://192.168.1.8:8081/ws';
+export const WS_ENDPOINT = import.meta.env.VITE_REACT_APP_WS_URL || 'http://192.168.100.207:8081/ws';
 
 export const WS_TOPICS = {
     POSITIONS: '/topic/positions',
