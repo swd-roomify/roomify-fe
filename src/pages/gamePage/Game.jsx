@@ -6,6 +6,7 @@ import Chat from '../../components/chat/Chat';
 import useWebSocket from '../../hooks/useWebSocket';
 import { createStompConfig, WS_ROUTES, WS_TOPICS } from '../../constants/WebSocketConstaint';
 import '../../assets/style/css/game.css';
+import HostProp from '../../components/host/hostProp';
 
 const Game = () => {
   const [nearbyPlayers, setNearbyPlayers] = useState([]);
@@ -20,7 +21,7 @@ const Game = () => {
   }, [location, navigate]);
 
   const user = location.state?.user;
-  
+
   const { users, chatMessages, sendPosition, sendChatMessage } = useWebSocket(
     createStompConfig, 
     WS_ROUTES, 
@@ -43,6 +44,7 @@ const Game = () => {
         chatMessages={chatMessages} 
         sendChatMessage={sendChatMessage} 
       />
+      <HostProp/>
     </>
   );
 };
