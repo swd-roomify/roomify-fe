@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import "../../assets/style/css/chat.css";
 import Draggable from 'react-draggable';
-import useWebSocket from '../../hooks/useWebSocket';
-import { createStompConfig, WS_ROUTES, WS_TOPICS } from '../../constants/WebSocketConstaint';
 
-const Chat = ({ user }) => {
+const Chat = ({ user, chatMessages, sendChatMessage }) => {
     const [input, setInput] = useState('');
-    const { chatMessages, sendChatMessage } = useWebSocket(createStompConfig, WS_ROUTES, WS_TOPICS, user);
 
     const handleSend = () => {
         if (input.trim()) {

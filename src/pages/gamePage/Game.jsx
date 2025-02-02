@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Map from '../../components/game/Map';
 import Camera from '../../components/camera/Camera';
-import '../../assets/style/css/game.css';
 import Chat from '../../components/chat/Chat';
-import Draggable from 'react-draggable';
+import useWebSocket from '../../hooks/useWebSocket';
+import { createStompConfig, WS_ROUTES, WS_TOPICS } from '../../constants/WebSocketConstaint';
+import '../../assets/style/css/game.css';
 
 const Game = () => {
   const [nearbyPlayers, setNearbyPlayers] = useState([]);
@@ -19,12 +20,29 @@ const Game = () => {
   }, [location, navigate]);
 
   const user = location.state?.user;
+  
+  const { users, chatMessages, sendPosition, sendChatMessage } = useWebSocket(
+    createStompConfig, 
+    WS_ROUTES, 
+    WS_TOPICS, 
+    user
+  );
 
   return (
     <>
       <Camera nearbyPlayers={nearbyPlayers} />
-      <Map onNearbyPlayersUpdate={setNearbyPlayers} user={user} />
-      <Chat user={user} />
+      <Map 
+        onNearbyPlayersUpdate={setNearbyPlayers} 
+        user={user} 
+        users={users} 
+        sendPosition={sendPosition} 
+        chatMessages={chatMessages} 
+      />
+      <Chat 
+        user={user} 
+        chatMessages={chatMessages} 
+        sendChatMessage={sendChatMessage} 
+      />
     </>
   );
 };
