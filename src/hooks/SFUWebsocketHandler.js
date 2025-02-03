@@ -200,8 +200,6 @@ const useMediasoup = () => {
   };
 
   const handleProducerTransportCreated = async (payload) => {
-    console.log("ICE", payload);
-
     const [{ id, iceParameters, iceCandidates, dtlsParameters }] = payload;
     const transport = deviceRef.current.createSendTransport({
       id,
@@ -308,7 +306,6 @@ const useMediasoup = () => {
       }
 
       producerRef.current = { videoProducer, audioProducer };
-      console.log("Producer transport connected", producerRef.current);
     } catch (error) {
       console.error("Detailed error:", {
         name: error.name,
