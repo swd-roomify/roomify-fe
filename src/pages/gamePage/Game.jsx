@@ -30,19 +30,9 @@ const Game = () => {
 
   return (
     <>
-      <Camera nearbyPlayers={nearbyPlayers} />
-      <Map 
-        onNearbyPlayersUpdate={setNearbyPlayers} 
-        user={user} 
-        users={users} 
-        sendPosition={sendPosition} 
-        chatMessages={chatMessages} 
-      />
-      <Chat 
-        user={user} 
-        chatMessages={chatMessages} 
-        sendChatMessage={sendChatMessage} 
-      />
+      <Camera nearbyPlayers={nearbyPlayers} user={user} />
+      <Map onNearbyPlayersUpdate={setNearbyPlayers} user={user} />
+      <Chat user={user} />
     </>
   );
 };
