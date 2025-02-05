@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../assets/style/css/homepage/navbar.css";
 
 const Navbar = () => {
   const [bgOpacity, setBgOpacity] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,19 +18,30 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleLogoClick = () => {
+    navigate("/");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <nav className="navbar" style={{ backgroundColor: `rgba(0, 0, 0, ${bgOpacity})` }}>
       <div className="navbar-container">
-        <Link to="/" className="logo">
+        <span className="logo" onClick={handleLogoClick}>
           MyLogo
-        </Link>
+        </span>
 
         <div className="nav-buttons">
-          <a href="#about" className="btn btn-nav">About</a>
-          <a href="#features" className="btn btn-nav">Features</a>
-          <a href="#contact" className="btn btn-nav">Contact</a>
-          <Link to="/login" className="btn btn-login">Sign In</Link>
-          <Link to="/signup" className="btn btn-signup">Get Started</Link>
+          <span onClick={() => document.getElementById("about").scrollIntoView({ behavior: "smooth" })} className="btn btn-nav">
+            About
+          </span>
+          <span onClick={() => document.getElementById("features").scrollIntoView({ behavior: "smooth" })} className="btn btn-nav">
+            Features
+          </span>
+          <span onClick={() => document.getElementById("contact").scrollIntoView({ behavior: "smooth" })} className="btn btn-nav">
+            Contact
+          </span>
+          <button onClick={() => navigate("/signin")} className="btn btn-login">Sign In</button>
+          <button onClick={() => navigate("/signup")} className="btn btn-signup">Get Started</button>
         </div>
       </div>
     </nav>
