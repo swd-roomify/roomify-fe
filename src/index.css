@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 #game-area {
-  width: 90vw; /* Sử dụng tỷ lệ phần trăm để responsive */
+  width: 90vw; 
   max-width: 400px;
   height: 90vw;
   max-height: 400px;
   background-color: #f9f9f9;
   border: 2px solid #ccc;
   position: relative;
-  margin: 0 auto; /* Center the game area */
+  margin: 0 auto; 
 }
 
 .box {
