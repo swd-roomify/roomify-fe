@@ -9,9 +9,15 @@ const NewHomePage = () => {
     return (
         <div id='homepage-container'>
             <Navbar />
-            <About />
-            <Feature />
-            <Contact />
+            <section id="about">
+                <About />
+            </section>
+            <section id="features">
+                <Feature />
+            </section>
+            <section id="contact">
+                <Contact />
+            </section>
             <Footer />
         </div>
     );
