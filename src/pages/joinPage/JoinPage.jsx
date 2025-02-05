@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { generateUser } from '../../api/generateUser';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { generateUser } from '../../api/generateUser'; // Import the function
 
-const MenuPage = () => {
+const JoinPage = () => {
   const [username, setUsername] = useState('');
-  const [roomCode, setRoomCode] = useState('');
   const [selectedCharacter, setSelectedCharacter] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const roomCode = new URLSearchParams(location.search).get('room') || '';
 
   const characters = ['character', 'character2', 'character3', 'character4'];
 
-  const handleJoinRoom = async () => {
+  const handleHopIn = async () => {
     if (username.trim() && roomCode.trim()) {
       setLoading(true);
       try {
         const user = await generateUser(username, selectedCharacter);
         console.log(user);
-        navigate('/demo', { state: { user, roomCode } });
+        navigate('/play', { state: { user, roomCode } });
       } catch (error) {
         console.error('Error generating user:', error);
       } finally {
@@ -26,13 +28,9 @@ const MenuPage = () => {
     }
   };
 
-  const handleHostRoom = () => {
-    console.log('Host Room clicked!'); 
-  };
-
   return (
     <div style={{ textAlign: 'center', padding: '50px' }}>
-      <h1>Join or Host a Game</h1>
+      <h1>Join Room: {roomCode}</h1>
       <input
         type="text"
         value={username}
@@ -67,52 +65,21 @@ const MenuPage = () => {
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
-        <div>
-          <input
-            type="text"
-            value={roomCode}
-            onChange={(e) => setRoomCode(e.target.value)}
-            placeholder="Enter Room Code"
-            style={{
-              padding: '10px',
-              fontSize: '16px',
-              width: '200px',
-              marginRight: '10px',
-            }}
-          />
-          <button
-            onClick={handleJoinRoom}
-            disabled={loading || !username.trim() || !roomCode.trim()}
-            style={{
-              padding: '10px 20px',
-              fontSize: '16px',
-              backgroundColor: '#4CAF50',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: loading ? 'not-allowed' : 'pointer',
-            }}
-          >
-            {loading ? 'Loading...' : 'Join Room'}
-          </button>
-        </div>
-
-        <button
-          onClick={handleHostRoom}
-          style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            backgroundColor: '#2196F3',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-          }}
-        >
-          Host Room
-        </button>
-      </div>
+      <button
+        onClick={handleHopIn}
+        disabled={loading || !username.trim()}
+        style={{
+          padding: '10px 20px',
+          fontSize: '16px',
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: loading ? 'not-allowed' : 'pointer',
+        }}
+      >
+        {loading ? 'Loading...' : 'Hop In'}
+      </button>
 
       {loading && (
         <div style={{ marginTop: '20px' }}>
@@ -123,4 +90,4 @@ const MenuPage = () => {
   );
 };
 
-export default MenuPage;
+export default JoinPage;
