@@ -28,7 +28,7 @@ const Navbar = () => {
           <a href="#about" className="btn btn-nav">About</a>
           <a href="#features" className="btn btn-nav">Features</a>
           <a href="#contact" className="btn btn-nav">Contact</a>
-          <Link to="/login" className="btn btn-login">Sign In</Link>
+          <Link to="/signin" className="btn btn-login">Sign In</Link>
           <Link to="/signup" className="btn btn-signup">Get Started</Link>
         </div>
       </div>
