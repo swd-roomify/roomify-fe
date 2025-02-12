@@ -8,11 +8,11 @@ const ListRoom = ({ rooms, onJoin }) => {
       {rooms.map((room, index) => (
         <RoomCard
           key={index}
-          roomName={room.roomName}
-          roomCode={room.roomCode}
-          hostId={room.hostId}
-          createdAt={room.createdAt}
-          onJoin={() => onJoin(room.roomCode)}
+          roomName={room.room_name}
+          roomCode={room.room_code}
+          hostId={room.host_id}
+          createdAt={room.created_at}
+          onJoin={() => onJoin(room.room_code)}
         />
       ))}
     </div>

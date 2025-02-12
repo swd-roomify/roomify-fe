@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SignUpUtil } from "../../utils/AuthUtil"; 
 import "../../assets/style/css/signup.css";
 
 export default function SignUp() {
@@ -6,24 +7,59 @@ export default function SignUp() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleSignUp = () => {
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleSignUp = async () => {
+    setError("");
+    setSuccess("");
+
+    if (!username || !email || !password || !repeatPassword) {
+      setError("All fields are required.");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (password !== repeatPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     setLoading(true);
-    
-    setTimeout(() => {
+
+    try {
+      const response = await SignUpUtil(username.trim(), email.trim(), password.trim());
+      setSuccess("Sign-up successful! You can now log in.");
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      setRepeatPassword("");
+    } catch (error) {
+      setError("Sign-up failed. Please try again.");
+      console.log(error);
+    } finally {
       setLoading(false);
-      alert(`Registered with username: ${username}, email: ${email}`);
-    }, 2000);
+    }
   };
 
   return (
     <div className="h-screen w-full flex justify-center items-center bg-gradient-to-b from-blue-700 to-blue-300 relative">
       <div className="absolute inset-0 bg-[url('/pixel-bg.png')] bg-cover opacity-30"></div>
 
-      <div className="signup-form relative bg-white p-20 rounded-2xl w-1/4 text-center">
+      <div className="signup-form relative bg-white p-10 rounded-2xl w-1/4 text-center shadow-lg">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">
           Create an account on <span className="text-blue-500">Roomify</span>
         </h2>
+
+        {error && <p className="text-red-500 mb-2">{error}</p>}
+        {success && <p className="text-green-500 mb-2">{success}</p>}
 
         <input
           type="text"
@@ -46,6 +82,14 @@ export default function SignUp() {
           placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="w-full border-2 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4"
+        />
+
+        <input
+          type="password"
+          placeholder="Repeat your password"
+          value={repeatPassword}
+          onChange={(e) => setRepeatPassword(e.target.value)}
           className="w-full border-2 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4"
         />
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { generateUser } from '../../api/generateUser';
+import { generateUser } from '../../utils/generateUser';
 
 const MenuPage = () => {
   const [username, setUsername] = useState('');

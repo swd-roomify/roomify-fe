@@ -31,7 +31,7 @@ const Map = ({ onNearbyPlayersUpdate, user, users, sendPosition, chatMessages })
     });
 
     onNearbyPlayersUpdate(nearbyPlayers);
-  }, [users, position, onNearbyPlayersUpdate]);
+  }, [users, position, onNearbyPlayersUpdate,user.user_id]);
 
   useEffect(() => {
     if (chatMessages.length) {

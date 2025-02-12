@@ -17,10 +17,13 @@ const RoutePath = () => {
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp/>}/>
         <Route path='/login' element={<Login/>}/>
-        <Route path='/demo' element={<Game />} />
-        <Route path='/game' element={<MenuPage />} />
-        <Route path='/join' element={<JoinPage />} />
         <Route path='/room' element={<UserRoomList />}/>
+
+        <Route path='/menu' element={<MenuPage />} />
+
+        <Route path='/join' element={<JoinPage />} />
+        <Route path='/play' element={<Game />} />
+
       </Routes>
     </BrowserRouter>
   )

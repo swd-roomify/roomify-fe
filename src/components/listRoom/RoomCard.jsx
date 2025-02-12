@@ -6,10 +6,10 @@ const RoomCard = ({ roomName, roomCode, hostId, createdAt, onJoin }) => {
     <div className="room-card">
       <h3>{roomName}</h3>
       <p>
-        <strong>Code:</strong> {roomCode}
+        <strong>Room Code:</strong> {roomCode}
       </p>
       <p>
-        <strong>Host ID:</strong> {hostId}
+        <strong>Room:</strong> {hostId}
       </p>
       <p>
         <strong>Created:</strong> {new Date(createdAt).toLocaleString()}

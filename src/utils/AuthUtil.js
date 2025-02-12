@@ -1,10 +1,14 @@
 import axios from 'axios';
 
-const BASE_API_URL = 'http://localhost:5000';
+const BASE_API_URL = 'http://localhost:8081';
+
+export const checkAuth = () => {
+    return (localStorage.getItem('token') != null && localStorage.getItem('user') != null )
+}
 
 export const SignUpUtil = async (username, email, password) => {
     try {
-        const response = await axios.post(`${BASE_API_URL}/signup`, {
+        const response = await axios.post(`${BASE_API_URL}/api/user/register`, {
             username,
             email,
             password,
@@ -23,7 +27,7 @@ export const SignUpUtil = async (username, email, password) => {
 
 export const SignInUtil = async (email, password) => {
     try {
-        const response = await axios.post(`${BASE_API_URL}/signin`, {
+        const response = await axios.post(`${BASE_API_URL}/api/user/signin`, {
             email,
             password,
         }, {

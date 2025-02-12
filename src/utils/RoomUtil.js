@@ -1,25 +1,16 @@
 import axios from 'axios';
 
-const BASE_API_URL = 'http://localhost:5000/api/room';
+const BASE_API_URL = 'http://localhost:8081/api/rooms';
 
 const token = localStorage.getItem('token');
 
-export const GetRoomUserUtil = async (roomId, roomName, roomCode, hostId, createAt) => {
+export const GetRoomUserUtil = async (hostId) => {
     try {
-        const response = await axios.get(`${BASE_API_URL}/getRoomUser`, {
-            params: {
-                roomId,
-                roomName,
-                roomCode,
-                hostId,
-                createAt,
-            },
+        const response = await axios.get(`${BASE_API_URL}/user/${hostId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
             },
         });
-
         return response.data;
     } catch (error) {
         console.error('Error getting room:', error);
@@ -29,7 +20,7 @@ export const GetRoomUserUtil = async (roomId, roomName, roomCode, hostId, create
 
 export const CreateRoomUserUtil = async (roomName, hostId) => {
     try {
-        const response = await axios.post(`${BASE_API_URL}/createRoom`, {
+        const response = await axios.post(`${BASE_API_URL}`, {
             roomName,
             hostId,
         }, {
@@ -46,10 +37,9 @@ export const CreateRoomUserUtil = async (roomName, hostId) => {
     }
 };
 
-// Join a room
 export const JoinRoomUserUtil = async (roomCode) => {
     try {
-        const response = await axios.post(`${BASE_API_URL}/joinRoom/${roomCode}`, {}, {
+        const response = await axios.get(`${BASE_API_URL}/code/${roomCode}`, {}, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
