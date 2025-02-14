@@ -1,6 +1,7 @@
+import { BASE_API_URL } from '@/constants/apiBaseUrlConstants';
 import axios from 'axios';
 
-const BASE_API_URL = 'http://localhost:8081';
+
 
 export const checkAuth = () => {
     return (localStorage.getItem('token') != null && localStorage.getItem('user') != null )

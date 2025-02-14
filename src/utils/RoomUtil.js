@@ -1,12 +1,13 @@
+import { BASE_API_URL } from '@/constants/apiBaseUrlConstants';
 import axios from 'axios';
 
-const BASE_API_URL = 'http://localhost:8081/api/rooms';
+const BASE_API_ROOM_URL = `${BASE_API_URL}/api/rooms`;
 
 const token = localStorage.getItem('token');
 
 export const GetRoomUserUtil = async (hostId) => {
     try {
-        const response = await axios.get(`${BASE_API_URL}/user/${hostId}`, {
+        const response = await axios.get(`${BASE_API_ROOM_URL}/user/${hostId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
@@ -20,7 +21,7 @@ export const GetRoomUserUtil = async (hostId) => {
 
 export const CreateRoomUserUtil = async (roomName, hostId) => {
     try {
-        const response = await axios.post(`${BASE_API_URL}`, {
+        const response = await axios.post(`${BASE_API_ROOM_URL}`, {
             roomName,
             hostId,
         }, {
@@ -39,7 +40,7 @@ export const CreateRoomUserUtil = async (roomName, hostId) => {
 
 export const JoinRoomUserUtil = async (roomCode) => {
     try {
-        const response = await axios.get(`${BASE_API_URL}/code/${roomCode}`, {}, {
+        const response = await axios.get(`${BASE_API_ROOM_URL}/code/${roomCode}`, {}, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',

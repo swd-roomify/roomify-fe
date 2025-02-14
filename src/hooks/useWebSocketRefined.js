@@ -12,11 +12,6 @@ const useWebSocketRefined = (createStompConfig, routes, topics, user, roomId) =>
             console.log("Websocket connection established");
             setStompClient(client);
             if (user) {
-                console.log(JSON.stringify({
-                    userId: user.user_id.toString(), 
-                    username: user.username,
-                    character: user.character,
-                }));
                 client.publish({
                     destination: '/app/join', 
                     body: JSON.stringify({
@@ -61,12 +56,12 @@ const useWebSocketRefined = (createStompConfig, routes, topics, user, roomId) =>
         };
     }, [createStompConfig, user, routes, topics, roomId]);
 
-    const sendPosition = (positionX, positionY) => {
+    const sendPosition = (position_x, position_y) => {
         if (stompClient && stompClient.connected) {
             const moveRequest = {
-                userId: user.userId,
-                positionX: positionX,
-                positionY: positionY
+                user_id: user.user_id,
+                position_x: position_x,
+                position_y: position_y
             };
             stompClient.publish({
                 destination: `/app/move/${roomId}`,

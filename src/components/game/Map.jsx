@@ -17,7 +17,7 @@ const Map = ({ onNearbyPlayersUpdate, user, users, sendPosition, chatMessages })
   useEffect(() => {
     if (position.x !== prevPositionRef.current.x || position.y !== prevPositionRef.current.y) {
       prevPositionRef.current = position;
-      sendPosition({ position_x: position.x, position_y: position.y });
+      sendPosition(position.x, position.y)
     }
   }, [position, sendPosition]);
 

@@ -1,3 +1,4 @@
+import { BASE_API_URL } from '@/constants/apiBaseUrlConstants';
 import axios from 'axios';
 
 export const generateUser = async (userId, username, character) => {
@@ -6,7 +7,7 @@ export const generateUser = async (userId, username, character) => {
   try {
     console.log("About to generate with user id",userId);
     const response = await axios.post(
-      'http://localhost:8081/api/user/generate',
+      `${BASE_API_URL}/api/user/generate`,
       { user_id: userId, 
         username: username,
         character:character },

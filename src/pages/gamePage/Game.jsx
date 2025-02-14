@@ -42,6 +42,7 @@ const Game = () => {
         user={user}
         users={users}
         chatMessages={chatMessages}
+        sendPosition={sendPosition}
       />
       {/* <Chat user={user} /> */}
     </>
