@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { generateUser } from '../../utils/generateUser';
 
 const MenuPage = () => {
   const [username, setUsername] = useState('');
+  const [roomCode, setRoomCode] = useState('');
   const [selectedCharacter, setSelectedCharacter] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -10,29 +12,12 @@ const MenuPage = () => {
   const characters = ['character', 'character2', 'character3', 'character4'];
 
   const handleJoinRoom = async () => {
-    if (username.trim()) {
+    if (username.trim() && roomCode.trim()) {
       setLoading(true);
-
       try {
-        const response = await fetch('http://192.168.100.207:8081/api/user/generate', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: username,
-            character: selectedCharacter,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to generate user');
-        }
-
-        const user = await response.json();
-        // console.log(user);
-
-        navigate('/demo', { state: { user } });
+        const user = await generateUser(username, selectedCharacter);
+        console.log(user);
+        navigate('/demo', { state: { user, roomCode } });
       } catch (error) {
         console.error('Error generating user:', error);
       } finally {
@@ -41,9 +26,13 @@ const MenuPage = () => {
     }
   };
 
+  const handleHostRoom = () => {
+    console.log('Host Room clicked!'); 
+  };
+
   return (
     <div style={{ textAlign: 'center', padding: '50px' }}>
-      <h1>Join the Game</h1>
+      <h1>Join or Host a Game</h1>
       <input
         type="text"
         value={username}
@@ -77,21 +66,53 @@ const MenuPage = () => {
           ))}
         </div>
       </div>
-      <button
-        onClick={handleJoinRoom}
-        disabled={loading || !username.trim()}
-        style={{
-          padding: '10px 20px',
-          fontSize: '16px',
-          backgroundColor: '#4CAF50',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: loading ? 'not-allowed' : 'pointer',
-        }}
-      >
-        {loading ? 'Loading...' : 'Join Room'}
-      </button>
+
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
+        <div>
+          <input
+            type="text"
+            value={roomCode}
+            onChange={(e) => setRoomCode(e.target.value)}
+            placeholder="Enter Room Code"
+            style={{
+              padding: '10px',
+              fontSize: '16px',
+              width: '200px',
+              marginRight: '10px',
+            }}
+          />
+          <button
+            onClick={handleJoinRoom}
+            disabled={loading || !username.trim() || !roomCode.trim()}
+            style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {loading ? 'Loading...' : 'Join Room'}
+          </button>
+        </div>
+
+        <button
+          onClick={handleHostRoom}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#2196F3',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+          }}
+        >
+          Host Room
+        </button>
+      </div>
 
       {loading && (
         <div style={{ marginTop: '20px' }}>
