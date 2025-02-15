@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import MenuPage from "../pages/menu/MenuPage";
-import Login from "../pages/home/Login";
-import Register from "../pages/home/Register";
-import AuthCallback from "../pages/home/OAuth2CallBack";
-import Logout from "../pages/home/logout";
-import Game from "../pages/gamePage/Game";
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import MenuPage from '../pages/menu/MenuPage'
+import Game from '../pages/gamePage/Game'
+import SignIn from '../pages/auth/SignIn'
+import Login from '../pages/auth/Login'
+import NewHomePage from '@/pages/homepage/NewHomePage'
+import JoinPage from '../pages/joinPage/JoinPage'
+import SignUp from '../pages/auth/SignUp'
+import ListRoom from '../components/listRoom/ListRoom'
+import UserRoomList from '@/pages/userRoom/UserRoomList'
 
 const RoutePath = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,61 +47,17 @@ const RoutePath = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <Login setIsLoggedIn={setIsLoggedIn} />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/logout"
-          element={<Logout setIsLoggedIn={setIsLoggedIn} />}
-        />
-        <Route
-          path="/register"
-          element={
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/auth/callback"
-          element={
-            <PublicRoute>
-              <AuthCallback setIsLoggedIn={setIsLoggedIn} />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/menu"
-          element={
-            <ProtectedRoute>
-              <MenuPage setIsLoggedIn={setIsLoggedIn} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/demo"
-          element={
-            <ProtectedRoute>
-              <Game setIsLoggedIn={setIsLoggedIn} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="*"
-          element={
-            isLoggedIn ? (
-              <Navigate to="/menu" replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+        <Route path='/' element={<NewHomePage />} />
+        <Route path='/signin' element={<SignIn />} />
+        <Route path='/signup' element={<SignUp/>}/>
+        <Route path='/login' element={<Login/>}/>
+        <Route path='/room' element={<UserRoomList />}/>
+
+        <Route path='/menu' element={<MenuPage />} />
+
+        <Route path='/join' element={<JoinPage />} />
+        <Route path='/play' element={<Game />} />
+
       </Routes>
     </BrowserRouter>
   );

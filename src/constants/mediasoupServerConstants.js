@@ -1,6 +1,6 @@
 const mediasoupServerConstants = {
 
-    sfuServerUrl: import.meta.env.VITE_SFU_SERVER_URL || "http://192.168.0.0:3000",
+    sfuServerUrl: import.meta.env.VITE_SFU_SERVER_URL || "http://192.168.100.207:3000",
     routerRtpCapabilities: "router-rtp-capabilities",
     connectionstatechange: "connectionstatechange",
     serverLog: "server-log",
@@ -12,7 +12,7 @@ const mediasoupServerConstants = {
     producerTransportCreated: "producer-transport-created",
     closeProducerTransport: "close-producer-transport",
     producerId: "producer-id",
-
+    otherUsersDisconnect: "other-users-disconnect",
 
     // consumer
     createConsumerTransport: "create-consumer-transport",
@@ -33,7 +33,7 @@ const mediasoupServerConstants = {
     connecting: "connecting",
     connected: "connected",
     failed: "failed",
-    
+    disconnect: "user_disconnect",
 };
   
 export default mediasoupServerConstants;

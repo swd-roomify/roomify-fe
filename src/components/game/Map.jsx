@@ -95,7 +95,7 @@ const Map = ({
       position.y !== prevPositionRef.current.y
     ) {
       prevPositionRef.current = position;
-      sendPosition({ position_x: position.x, position_y: position.y });
+      sendPosition(position.x, position.y)
     }
   }, [position, sendPosition]);
 
@@ -109,7 +109,7 @@ const Map = ({
     });
 
     onNearbyPlayersUpdate(nearbyPlayers);
-  }, [users, position, onNearbyPlayersUpdate]);
+  }, [users, position, onNearbyPlayersUpdate,user.user_id]);
 
   useEffect(() => {
     if (chatMessages.length) {
