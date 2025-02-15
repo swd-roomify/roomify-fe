@@ -1,10 +1,15 @@
 .map {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: blue;
+  left: 15%;
+  width: 1217px;
+  height: 810px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url("/src/assets/map.png");
+  background-position: center;
+  aspect-ratio: 16/9;
+  margin: auto;
   overflow: hidden;
   z-index: -1;
 }

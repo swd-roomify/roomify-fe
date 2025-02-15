@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-const usePlayerMovement = (initialPosition) => {
+const usePlayerMovement = (initialPosition, checkCollision, checkTeleport) => {
   const [position, setPosition] = useState(initialPosition);
   const [keysPressed, setKeysPressed] = useState({});
 
@@ -17,12 +17,12 @@ const usePlayerMovement = (initialPosition) => {
       });
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
 
@@ -37,12 +37,20 @@ const usePlayerMovement = (initialPosition) => {
         if (keysPressed.ArrowLeft) x -= step;
         if (keysPressed.ArrowRight) x += step;
 
-        return { x, y };
+        if (!checkCollision(x, y)) {
+          const teleportTarget = checkTeleport(x, y);
+          if (teleportTarget) {
+            return teleportTarget;
+          }
+          return { x, y };
+        }
+
+        return prev;
       });
     }, 16); // Approximately 60fps
 
     return () => clearInterval(interval);
-  }, [keysPressed]);
+  }, [keysPressed, checkCollision, checkTeleport]);
 
   return position;
 };
