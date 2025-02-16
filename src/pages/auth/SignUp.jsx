@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { SignUpUtil } from "../../utils/AuthUtil"; 
+import { useNavigate } from "react-router-dom";
 import "../../assets/style/css/signup.css";
+import { SignUpUtil } from "../../utils/AuthUtil";
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
@@ -10,6 +11,7 @@ export default function SignUp() {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -41,6 +43,7 @@ export default function SignUp() {
       setEmail("");
       setPassword("");
       setRepeatPassword("");
+      navigate("/signin")
     } catch (error) {
       setError("Sign-up failed. Please try again.");
       console.log(error);
