@@ -1,0 +1,12 @@
+.signin-button {
+    background: rgb(6, 199, 148);
+}
+
+.signin-button:hover {
+    background: rgb(5, 159, 118);
+}
+
+.login-form {
+    background: rgb(255, 255, 255);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
