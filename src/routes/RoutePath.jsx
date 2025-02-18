@@ -1,13 +1,12 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import MenuPage from '../pages/menu/MenuPage'
-import Game from '../pages/gamePage/Game'
-import SignIn from '../pages/auth/SignIn'
-import Login from '../pages/auth/Login'
 import NewHomePage from '@/pages/homepage/NewHomePage'
-import JoinPage from '../pages/joinPage/JoinPage'
-import SignUp from '../pages/auth/SignUp'
-import ListRoom from '../components/listRoom/ListRoom'
 import UserRoomList from '@/pages/userRoom/UserRoomList'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Login from '../pages/auth/Login'
+import SignIn from '../pages/auth/SignIn'
+import SignUp from '../pages/auth/SignUp'
+import Game from '../pages/gamePage/Game'
+import JoinPage from '../pages/joinPage/JoinPage'
+import MenuPage from '../pages/menu/MenuPage'
 
 const RoutePath = () => {
   return (

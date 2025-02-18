@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { SignInUtil } from "../../utils/AuthUtil";
+import { useNavigate } from "react-router-dom";
 import "../../assets/style/css/signin.css";
+import { SignInUtil } from "../../utils/AuthUtil";
 import avatar1 from "/assets/sprites/character.png";
 import avatar2 from "/assets/sprites/character2.png";
 import avatar3 from "/assets/sprites/character3.png";
@@ -9,12 +10,13 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
   const handleLogin = async () => {
     setLoading(true);
     try {
       const response = await SignInUtil(email, password);
       alert(`Logged in as: ${response.user.username}`);
+      navigate("/room")
       
     } catch (error) {
       alert("Login failed. Please check your credentials.");
