@@ -43,6 +43,7 @@ export default function SignUp() {
       setEmail("");
       setPassword("");
       setRepeatPassword("");
+      
       navigate("/signin")
     } catch (error) {
       setError("Sign-up failed. Please try again.");
