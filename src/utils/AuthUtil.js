@@ -1,10 +1,8 @@
 import { BASE_API_URL } from '@/constants/apiBaseUrlConstants';
 import axios from 'axios';
 
-
-
 export const checkAuth = () => {
-    return (localStorage.getItem('token') != null && localStorage.getItem('user') != null )
+    return (localStorage.getItem('token') != null && localStorage.getItem('user') != null)
 }
 
 export const SignUpUtil = async (username, email, password) => {

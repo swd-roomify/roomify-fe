@@ -3,6 +3,7 @@ import "../../assets/style/css/signin.css";
 import avatar1 from "/assets/sprites/character.png";
 import avatar2 from "/assets/sprites/character2.png";
 import avatar3 from "/assets/sprites/character3.png";
+import { BASE_API_URL } from "@/constants/apiBaseUrlConstants";
 
 export default function SignIn() {
     const [loading, setLoading] = useState(false);
@@ -14,6 +15,14 @@ export default function SignIn() {
             alert("Signed In!");
         }, 2000);
     };
+
+    const backendUrl = `${BASE_API_URL}/oauth2/authorization`;
+
+    const handleOAuthSignIn = (provider) => {
+        window.location.href = `${backendUrl}/${provider}`;
+    };
+
+
 
     return (
         <div className="h-screen w-full flex justify-center items-center bg-gradient-to-b from-blue-700 to-blue-300 relative">
@@ -30,7 +39,9 @@ export default function SignIn() {
                     Welcome to <span className="text-blue-500">Roomify</span>
                 </h2>
 
-                <button className="w-full border-2 border-black py-3 rounded-lg flex items-center justify-center mb-4 hover:bg-gray-100">
+                <button
+                    onClick={() => handleOAuthSignIn("google")}
+                    className="w-full border-2 border-black py-3 rounded-lg flex items-center justify-center mb-4 hover:bg-gray-100">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -57,13 +68,15 @@ export default function SignIn() {
                             d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
                         ></path>
                     </svg>
-                    <span>Sign in with Google</span>    
+                    <span>Sign in with Google</span>
                 </button>
 
-                <button className="w-full border-2 border-black py-3 rounded-lg flex items-center justify-center mb-4 hover:bg-gray-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" 
-                        width="20" 
-                        height="20" 
+                <button
+                    onClick={() => handleOAuthSignIn("github")}
+                    className="w-full border-2 border-black py-3 rounded-lg flex items-center justify-center mb-4 hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
                         viewBox="0 0 64 64"
                         id="github"
                         className="mr-2"
