@@ -44,3 +44,22 @@ export const SignInUtil = async (email, password) => {
         throw error;
     }
 };
+
+export const getUserUtil = async (username) => {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("No token found");
+
+        const response = await axios.get(`${BASE_API_URL}/api/auth/me/${username}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        throw error;
+    }
+};
