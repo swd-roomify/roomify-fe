@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import "../../assets/style/css/map.css";
 import Player from './Player';
 import usePlayerMovement from '../../hooks/usePlayerMovement';
-import useWebSocket from '../../hooks/useWebSocket';
-import { createStompConfig, WS_ROUTES, WS_TOPICS } from '../../constants/WebSocketConstaint';
 
 const calculateDistance = (pos1, pos2) => {
   const dx = pos1.x - pos2.x;
@@ -11,19 +9,15 @@ const calculateDistance = (pos1, pos2) => {
   return Math.sqrt(dx * dx + dy * dy);
 };
 
-const Map = ({ onNearbyPlayersUpdate, user }) => {
+const Map = ({ onNearbyPlayersUpdate, user, users, sendPosition, chatMessages }) => {
   const position = usePlayerMovement({ x: 300, y: 200 });
   const prevPositionRef = useRef(position);
-
-  const { users, sendPosition } = useWebSocket(createStompConfig, WS_ROUTES, WS_TOPICS, user);
+  const [chatBubbles, setChatBubbles] = useState({});
 
   useEffect(() => {
-    if (
-      position.x !== prevPositionRef.current.x ||
-      position.y !== prevPositionRef.current.y
-    ) {
+    if (position.x !== prevPositionRef.current.x || position.y !== prevPositionRef.current.y) {
       prevPositionRef.current = position;
-      sendPosition({ position_x: position.x, position_y: position.y });
+      sendPosition(position.x, position.y)
     }
   }, [position, sendPosition]);
 
@@ -37,7 +31,24 @@ const Map = ({ onNearbyPlayersUpdate, user }) => {
     });
 
     onNearbyPlayersUpdate(nearbyPlayers);
-  }, [users, position, onNearbyPlayersUpdate]);
+  }, [users, position, onNearbyPlayersUpdate,user.user_id]);
+
+  useEffect(() => {
+    if (chatMessages.length) {
+      const latestMessage = chatMessages[chatMessages.length - 1];
+      setChatBubbles((prev) => ({
+        ...prev,
+        [latestMessage.userId]: latestMessage.message,
+      }));
+
+      setTimeout(() => {
+        setChatBubbles((prev) => {
+          const { [latestMessage.userId]: _, ...rest } = prev;
+          return rest;
+        });
+      }, 5000);
+    }
+  }, [chatMessages]);
 
   return (
     <div className="map">
@@ -51,7 +62,12 @@ const Map = ({ onNearbyPlayersUpdate, user }) => {
             left: player.position_x,
           }}
         >
-          <Player name={player.username} character={player.user_id === user.user_id ? 'character' : 'character2'} />
+          <Player name={player.username} character={player.character} />
+          {chatBubbles[player.user_id] && (
+            <div className="chat-bubble">
+              {chatBubbles[player.user_id]}
+            </div>
+          )}
         </div>
       ))}
     </div>
