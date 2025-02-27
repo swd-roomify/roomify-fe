@@ -1,6 +1,6 @@
 const mediasoupServerConstants = {
 
-    sfuServerUrl: import.meta.env.VITE_SFU_SERVER_URL || "http://192.168.100.207:3000",
+    sfuServerUrl: import.meta.env.VITE_SFU_SERVER_URL || "http://localhost:3000",
     routerRtpCapabilities: "router-rtp-capabilities",
     connectionstatechange: "connectionstatechange",
     serverLog: "server-log",
