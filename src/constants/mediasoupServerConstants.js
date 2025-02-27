@@ -1,6 +1,6 @@
 const mediasoupServerConstants = {
 
-    sfuServerUrl: import.meta.env.VITE_SFU_SERVER_URL || "http://localhost:3000",
+    sfuServerUrl: import.meta.env.VITE_SFU_SERVER_URL || "https://pog-internal.threemusketeer.click",
     routerRtpCapabilities: "router-rtp-capabilities",
     connectionstatechange: "connectionstatechange",
     serverLog: "server-log",
