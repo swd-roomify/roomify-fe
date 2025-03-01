@@ -1,11 +1,119 @@
 .user-room-list {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .user-room-list h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-room-list h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.create-room, .room-join {
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+}
+
+.create-room form, .room-join form {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.create-room-input, .room-join-input {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.create-room-input:focus, .room-join-input:focus {
+  border-color: #007bff;
+}
+
+.create-room-btn, .room-join-btn {
+  padding: 10px 20px;
+  margin-left: 10px;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.create-room-btn:hover, .room-join-btn:hover {
+  background: linear-gradient(135deg, #0056b3, #003d82);
+}
+
+.list-room {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+}
+
+.room-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.room-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.room-card h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.room-card p {
+  color: #666;
+  font-size: 1rem;
+  margin: 5px 0;
+}
+
+.join-btn {
+  background: linear-gradient(135deg, #28a745, #218838);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: background 0.3s ease;
+  opacity: 0;
+}
+
+.room-card:hover .join-btn {
+  opacity: 1;
+}
+
+.join-btn:hover {
+  background: linear-gradient(135deg, #218838, #19692c);
+}
