@@ -1,9 +1,0 @@
-.button-outline {
-    color: black;
-    background-color: #03bf8d;
-    transition: color 0.3s, background-color 0.3s;
-}
-
-.button-outline:hover {
-    background-color: #00ffbb;
-}
