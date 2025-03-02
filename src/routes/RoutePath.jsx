@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import NewHomePage from '@/pages/homepage/NewHomePage'
 import UserRoomList from '@/pages/userRoom/UserRoomList'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
@@ -13,13 +14,16 @@ const RoutePath = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<NewHomePage />} />
-        <Route path='/signin' element={<SignIn />} />
-        <Route path='/signup' element={<SignUp/>}/>
-        <Route path='/login' element={<Login/>}/>
-        <Route path='/room' element={<UserRoomList />}/>
+        <Route path="/" element={<NewHomePage />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route
+          path="/login"
+          element={<Login setIsLoggedIn={setIsLoggedIn} />}
+        />
+        <Route path="/room" element={<UserRoomList />} />
 
-        <Route path='/menu' element={<MenuPage />} />
+        <Route path="/menu" element={<MenuPage />} />
 
         <Route path='/join' element={<JoinPage />} />
         <Route path='/play' element={<Game />} />
