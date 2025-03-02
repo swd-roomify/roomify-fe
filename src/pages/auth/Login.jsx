@@ -8,14 +8,13 @@ import avatar3 from "/assets/sprites/character3.png";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const response = await SignInUtil(email, password);
-      alert(`Logged in as: ${response.user.username}`);
+      await SignInUtil(username, password);
       navigate("/room")
       
     } catch (error) {
@@ -39,9 +38,9 @@ export default function Login() {
         </h2>
         <input
           type="text"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           className="w-full border-2 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4"
         />
         <input

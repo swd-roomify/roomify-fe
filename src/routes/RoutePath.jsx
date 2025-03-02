@@ -1,4 +1,4 @@
-import NewHomePage from '@/pages/homepage/NewHomePage'
+import HomePage from '@/pages/homepage/HomePage'
 import UserRoomList from '@/pages/userRoom/UserRoomList'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Login from '../pages/auth/Login'
@@ -13,7 +13,7 @@ const RoutePath = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<NewHomePage />} />
+        <Route path='/' element={<HomePage />} />
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp/>}/>
         <Route path='/login' element={<Login/>}/>

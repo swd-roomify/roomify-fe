@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../assets/style/css/signin.css";
 import avatar1 from "/assets/sprites/character.png";
 import avatar2 from "/assets/sprites/character2.png";
@@ -6,13 +7,14 @@ import avatar3 from "/assets/sprites/character3.png";
 import { BASE_API_URL } from "@/constants/apiBaseUrlConstants";
 
 export default function SignIn() {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
     const handleSignIn = () => {
         setLoading(true);
         setTimeout(() => {
             setLoading(false);
-            alert("Signed In!");
+            navigate("/signup");
         }, 2000);
     };
 
@@ -101,7 +103,7 @@ export default function SignIn() {
                     {loading ? (
                         <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
                     ) : (
-                        "Continue"
+                        "Sign Up With Email"
                     )}
                 </button>
             </div>

@@ -24,25 +24,27 @@ export const SignUpUtil = async (username, email, password) => {
     }
 };
 
-export const SignInUtil = async (email, password) => {
-    try {
-        const response = await axios.post(`${BASE_API_URL}/api/user/signin`, {
-            email,
-            password,
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+export const SignInUtil = async (username, password) => {
+    const response = await axios.post(`${BASE_API_URL}/api/v1/login/non-type`, {
+        username,
+        password,
+    }, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
 
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+    const token = response.data?.data?.token;
+    const user_id = response.data?.data?.user_id;
 
-        return response.data;
-    } catch (error) {
-        console.error('Error during sign-in:', error);
-        throw error;
+    if (!token) {
+        throw new Error("Token not found in response");
     }
+
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify({ user_id: user_id }));
+
+    return response.data?.data;
 };
 
 export const getUserUtil = async (username) => {

@@ -40,13 +40,12 @@ export const CreateRoomUserUtil = async (roomName, hostId) => {
 
 export const JoinRoomUserUtil = async (roomCode) => {
     try {
-        const response = await axios.get(`${BASE_API_ROOM_URL}/code/${roomCode}`, {}, {
+        const response = await axios.get(`${BASE_API_ROOM_URL}/code/${roomCode}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
         });
-
         return response.data;
     } catch (error) {
         console.error('Error joining room:', error);
