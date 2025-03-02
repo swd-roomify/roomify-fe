@@ -1,0 +1,35 @@
+.create-room {
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .create-room form {
+    display: flex;
+    align-items: center;
+  }
+  
+  .create-room-input {
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+  }
+  
+  .create-room-btn {
+    padding: 8px 16px;
+    margin-left: 8px;
+    font-size: 1rem;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .create-room-btn:hover {
+    background-color: #218838;
+  }
+  
