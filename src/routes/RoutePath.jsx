@@ -18,8 +18,6 @@ const RoutePath = () => {
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp/>}/>
         <Route path='/room' element={<UserRoomList />}/>
-          element={<Login setIsLoggedIn={setIsLoggedIn} />}
-
         <Route path="/menu" element={<MenuPage />} />
 
         <Route path='/join' element={<JoinPage />} />
