@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { MessageSquare, Video } from "lucide-react";
-import "../../assets/style/css/HomePage.css";
+import "../../assets/style/css/homepage.css";
 
 export default function HomePage() {
   const [messages, setMessages] = useState([
