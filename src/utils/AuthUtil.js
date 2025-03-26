@@ -7,7 +7,7 @@ export const checkAuth = () => {
 
 export const SignUpUtil = async (username, email, password) => {
     try {
-        const response = await axios.post(`${BASE_API_URL}/api/user/register`, {
+        const response = await axios.post(`${BASE_API_URL}/api/auth/register-account`, {
             username,
             email,
             password,
@@ -26,7 +26,7 @@ export const SignUpUtil = async (username, email, password) => {
 
 export const SignInUtil = async (email, password) => {
     try {
-        const response = await axios.post(`${BASE_API_URL}/api/user/signin`, {
+        const response = await axios.post(`${BASE_API_URL}/api/user/v1/signin`, {
             email,
             password,
         }, {

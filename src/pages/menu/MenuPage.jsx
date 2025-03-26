@@ -4,7 +4,7 @@ import { generateUser } from "../../utils/generateUser";
 
 const MenuPage = () => {
   const [username, setUsername] = useState("");
-  const [roomCode, setRoomCode] = useState("");
+  const [room_id, setRoomCode] = useState("");
   const [selectedCharacter, setSelectedCharacter] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -12,11 +12,11 @@ const MenuPage = () => {
   const characters = ["character", "character2", "character3", "character4"];
 
   const handleJoinRoom = async () => {
-    if (username.trim() && roomCode.trim()) {
+    if (username.trim() && room_id.trim()) {
       setLoading(true);
       try {
         const user = await generateUser(username, selectedCharacter);
-        navigate("/demo", { state: { user, roomCode } });
+        navigate("/play", { state: { user, room_id } });
       } catch (error) {
         console.error('Error generating user:', error);
       } finally {
@@ -61,16 +61,16 @@ const MenuPage = () => {
         <div className="flex flex-col md:flex-row justify-center gap-4 mt-4">
           <input
             type="text"
-            value={roomCode}
+            value={room_id}
             onChange={(e) => setRoomCode(e.target.value)}
             placeholder="Enter Room Code"
             className="border-2 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 w-full md:w-auto"
           />
           <button
             onClick={handleJoinRoom}
-            disabled={loading || !username.trim() || !roomCode.trim()}
+            disabled={loading || !username.trim() || !room_id.trim()}
             className={`px-6 py-2 rounded-lg text-white font-semibold transition-all w-full md:w-auto ${
-              loading || !username.trim() || !roomCode.trim()
+              loading || !username.trim() || !room_id.trim()
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-green-500 hover:bg-green-600"
             }`}

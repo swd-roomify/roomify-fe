@@ -7,7 +7,7 @@ export const generateUser = async (userId, username, character) => {
   try {
     console.log("About to generate with user id",userId);
     const response = await axios.post(
-      `${BASE_API_URL}/api/user/generate`,
+      `${BASE_API_URL}/api/user/v1/generate`,
       { user_id: userId, 
         username: username,
         character:character },

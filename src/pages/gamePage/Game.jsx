@@ -15,7 +15,6 @@ const Game = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const account = localStorage.getItem('user');
-    // Ensure the user is authenticated and proper state exists
     if (!token || !account) {
       navigate('/login');
       return;
@@ -24,6 +23,7 @@ const Game = () => {
       navigate('/room');
       return;
     }
+    
   }, [location, navigate]);
 
   const user = location.state.user;

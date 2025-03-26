@@ -1,24 +1,35 @@
-import Navbar from '../../components/homepageComponents/navbar';
-import '../../assets/style/css/homepage/homepage.css';
-import About from '@/components/homepageComponents/about';
-import Contact from '@/components/homepageComponents/contact';
-import Feature from '@/components/homepageComponents/feature';
+import { Outlet, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import Navbar from '@/components/homepageComponents/navbar';
 import Footer from '@/components/homepageComponents/footer';
+import '../../assets/style/css/homepage/homepage.css';
 
-const NewHomePage = () => (
+const NewHomePage = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const scrollTo = params.get("scrollTo");
+
+    if (scrollTo) {
+      setTimeout(() => {
+        const element = document.getElementById(scrollTo);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+
+          window.history.replaceState(null, "", "/");
+        }
+      }, 100);
+    }
+  }, [location]);
+
+  return (
     <div id="homepage-container">
       <Navbar />
-      <section id="about">
-        <About />
-      </section>
-      <section id="features">
-        <Feature />
-      </section>
-      <section id="contact">
-        <Contact />
-      </section>
+      <Outlet />
       <Footer />
     </div>
   );
-  
-  export default NewHomePage;
+};
+
+export default NewHomePage;

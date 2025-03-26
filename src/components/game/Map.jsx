@@ -22,14 +22,14 @@ const Map = ({ onNearbyPlayersUpdate, user, users, sendPosition, chatMessages })
   }, [position, sendPosition]);
 
   useEffect(() => {
-    const nearby = Object.values(users).filter(player => {
+    const nearbyPlayers = Object.values(users).filter((player) => {
       const distance = calculateDistance(position, {
         x: player.position_x,
         y: player.position_y,
       });
       return distance <= 50 && player.user_id !== user.user_id;
     });
-    onNearbyPlayersUpdate(nearby);
+    onNearbyPlayersUpdate(nearbyPlayers);
   }, [users, position, onNearbyPlayersUpdate, user.user_id]);
 
   useEffect(() => {
@@ -41,8 +41,8 @@ const Map = ({ onNearbyPlayersUpdate, user, users, sendPosition, chatMessages })
       }));
 
       setTimeout(() => {
-        setChatBubbles(prev => {
-          const { [latestMessage.userId]: removed, ...rest } = prev;
+        setChatBubbles((prev) => {
+          const { [latestMessage.userId]: _, ...rest } = prev;
           return rest;
         });
       }, 5000);
@@ -51,11 +51,15 @@ const Map = ({ onNearbyPlayersUpdate, user, users, sendPosition, chatMessages })
 
   return (
     <div className="map">
-      {Object.values(users).map(player => (
+      {Object.values(users).map((player) => (
         <div
           key={player.user_id}
           className="player"
-          style={{ top: player.position_y, left: player.position_x }}
+          style={{
+            position: 'absolute',
+            top: player.position_y,
+            left: player.position_x,
+          }}
         >
           <Player name={player.username} character={player.character} />
           {chatBubbles[player.user_id] && (

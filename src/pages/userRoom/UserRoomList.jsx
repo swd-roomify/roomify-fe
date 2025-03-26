@@ -7,8 +7,6 @@ import "../../assets/style/css/listRoom/userRoomList.css";
 import axios from "axios";
 import { CreateRoomUserUtil, GetRoomUserUtil, JoinRoomUserUtil } from "@/utils/RoomUtil";
 
-const BASE_API_URL = "http://localhost:8081";
-
 const UserRoomList = () => {
   const navigate = useNavigate();
   const [rooms, setRooms] = useState([]);
