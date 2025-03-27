@@ -77,7 +77,7 @@ const SignIn = ({ setIsLoggedIn }) => {
           />
           <button
             type="submit"
-            className="w-full bg-green-500 text-white py-2 rounded-lg mt-4 flex justify-center items-center"
+            className="signin-button w-full py-2 rounded-lg mt-4 flex justify-center items-center"
             disabled={loading}
           >
             {loading ? (
@@ -86,6 +86,7 @@ const SignIn = ({ setIsLoggedIn }) => {
               "Login"
             )}
           </button>
+
         </form>
       </div>
     </div>
