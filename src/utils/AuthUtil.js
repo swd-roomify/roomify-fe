@@ -79,3 +79,30 @@ export const isTokenValid = () => {
     
     return true;
 };
+
+export const updatePasswordUtil = async (userId, oldPassword, newPassword) => {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("No token found");
+
+        const response = await axios.put(
+            `${BASE_API_URL}/api/auth/update-password`,
+            {
+                userId,
+                oldPassword,
+                newPassword,
+            },
+            {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error("Error updating password:", error);
+        throw error;
+    }
+};

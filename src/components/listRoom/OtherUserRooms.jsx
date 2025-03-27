@@ -10,7 +10,7 @@ const OtherUserRooms = ({ rooms, onJoin }) => {
           key={index}
           roomName={room.room_name}
           roomCode={room.room_code}
-          hostId={room.host_id}
+          hostId={room.host.username}
           createdAt={room.created_at}
           onJoin={() => onJoin(room.room_code)}
         />

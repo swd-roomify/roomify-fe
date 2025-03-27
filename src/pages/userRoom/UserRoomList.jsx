@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import CreateRoom from "../../components/listRoom/RoomCreate";
 import RoomJoin from "../../components/listRoom/RoomJoin";
 import ListRoom from "../../components/listRoom/ListRoom";
-import OtherUserRooms from "../../components/listRoom/OtherUserRooms.jsx"; // Import thêm
+import OtherUserRooms from "../../components/listRoom/OtherUserRooms.jsx";
 import "../../assets/style/css/listRoom/userRoomList.css";
-import { CreateRoomUserUtil, GetRoomUserUtil, JoinRoomUserUtil } from "@/utils/RoomUtil";
+import { CreateRoomUserUtil, GetRoomUserUtil, JoinRoomUserUtil, GetAllRooms } from "@/utils/RoomUtil"; // Import GetAllRooms
 
 const UserRoomList = () => {
   const navigate = useNavigate();
@@ -28,15 +28,9 @@ const UserRoomList = () => {
         const userRooms = await GetRoomUserUtil(account.user_id);
         setRooms(userRooms);
 
-        // Dummy data - 15 phòng của user khác
-        const dummyRooms = Array.from({ length: 15 }, (_, i) => ({
-          room_name: `Room ${i + 1}`,
-          room_code: `CODE${i + 100}`,
-          host_id: `user_${i + 10}`,
-          created_at: new Date(2025, 2, i + 1, 14, 30).toISOString(),
-        }));
-
-        setOtherRooms(dummyRooms);
+        const allRooms = await GetAllRooms();
+        const filteredRooms = allRooms.filter(room => room.host.user_id != account.user_id);
+        setOtherRooms(filteredRooms);
       } catch (error) {
         console.error("Error fetching rooms:", error);
       }
@@ -73,12 +67,10 @@ const UserRoomList = () => {
     }
   };
 
-  // Lấy danh sách phòng theo trang hiện tại
   const indexOfLastRoom = currentPage * roomsPerPage;
   const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
   const currentRooms = otherRooms.slice(indexOfFirstRoom, indexOfLastRoom);
 
-  // Hàm chuyển trang
   const nextPage = () => {
     if (currentPage < Math.ceil(otherRooms.length / roomsPerPage)) {
       setCurrentPage(currentPage + 1);
