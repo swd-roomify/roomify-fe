@@ -1,12 +1,23 @@
+.login-form input,
+.login-form button {
+    color: #333;
+}
+
+.login-form input::placeholder {
+    color: #777;
+}
+
+.login-form input:focus {
+    border-color: #06c794;
+    box-shadow: 0 0 5px rgba(6, 199, 148, 0.5);
+}
+
 .signin-button {
-    background: rgb(6, 199, 148);
+    color: white;
+    background: linear-gradient(135deg, #06c794, #049f76);
+    font-weight: bold;
 }
 
 .signin-button:hover {
-    background: rgb(5, 159, 118);
-}
-
-.login-form {
-    background: rgb(255, 255, 255);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, #049f76, #037d5b);
 }

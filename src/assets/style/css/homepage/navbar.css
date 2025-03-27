@@ -1,3 +1,4 @@
+/* Navbar */
 .navbar {
   position: sticky;
   top: 0;
@@ -9,7 +10,7 @@
   align-items: center;
   z-index: 1000;
   background: rgba(0, 0, 0, 0);
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .navbar-container {
@@ -21,67 +22,142 @@
 }
 
 .logo {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: bold;
   color: white;
   text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.logo:hover {
+  color: #1e90ff;
 }
 
 .nav-buttons {
   display: flex;
-  gap: 15px;
+  gap: 20px;
 }
 
-.btn {
-  padding: 10px 15px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: 0.3s ease-in-out;
-  color: white;
-}
-
-.btn-nav {
-  background: none;
-  border: 1px solid white;
-}
-
-.btn-nav:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.btn-signup {
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: white;
+/* Style chung cho tất cả button */
+.btn, .btn-nav, .btn-signup, .btn-login, .btn-user {
   padding: 12px 20px;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: bold;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+}
+
+/* Navigation Buttons */
+.btn-nav {
+  background: linear-gradient(135deg, #ff8c00, #ff4500);
+  border: none;
+  box-shadow: 0 4px 8px rgba(255, 140, 0, 0.3);
+}
+
+.btn-nav:hover {
+  background: linear-gradient(135deg, #ff4500, #ff8c00);
+  box-shadow: 0 6px 12px rgba(255, 69, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Sign Up Button */
+.btn-signup {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
 }
 
 .btn-signup:hover {
   background: linear-gradient(135deg, #0056b3, #003c80);
-  box-shadow: 0 6px 10px rgba(0, 123, 255, 0.5);
-  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.5);
+  transform: translateY(-3px);
 }
 
+/* Sign In Button */
 .btn-login {
   background: linear-gradient(135deg, #28a745, #1e7e34);
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
 .btn-login:hover {
   background: linear-gradient(135deg, #1e7e34, #155724);
-  box-shadow: 0 6px 10px rgba(40, 167, 69, 0.5);
+  box-shadow: 0 6px 12px rgba(40, 167, 69, 0.5);
+  transform: translateY(-3px);
+}
+
+/* User Dropdown */
+.user-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.btn-user {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  box-shadow: 0 4px 8px rgba(106, 17, 203, 0.3);
+  display: flex;
+  gap: 8px;
+}
+
+.btn-user:hover {
+  background: linear-gradient(135deg, #2575fc, #6a11cb);
+  box-shadow: 0 6px 12px rgba(106, 17, 203, 0.5);
   transform: translateY(-2px);
 }
 
+.btn-user::after {
+  content: " ▼";
+  font-size: 0.8rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.user-dropdown.open .btn-user::after {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  min-width: 160px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease-in-out;
+  visibility: hidden;
+}
+
+.user-dropdown:hover .dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.dropdown-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  display: block;
+  color: black;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.dropdown-item:hover {
+  background: #f0f0f0;
+}
+
+.logout {
+  color: red;
+  font-weight: bold;
+}
+ 

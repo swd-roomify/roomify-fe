@@ -37,14 +37,14 @@ export default function SignUp() {
     setLoading(true);
 
     try {
-      const response = await SignUpUtil(username.trim(), email.trim(), password.trim());
+      await SignUpUtil(username.trim(), email.trim(), password.trim());
       setSuccess("Sign-up successful! You can now log in.");
       setUsername("");
       setEmail("");
       setPassword("");
       setRepeatPassword("");
       
-      navigate("/signin")
+      navigate("/signin");
     } catch (error) {
       setError("Sign-up failed. Please try again.");
       console.log(error);
@@ -54,11 +54,11 @@ export default function SignUp() {
   };
 
   return (
-    <div className="h-screen w-full flex justify-center items-center bg-gradient-to-b from-blue-700 to-blue-300 relative">
-      <div className="absolute inset-0 bg-[url('/pixel-bg.png')] bg-cover opacity-30"></div>
+    <div className="h-screen w-full flex justify-center items-center bg-gradient-to-br from-indigo-600 to-blue-400 relative">
+      <div className="absolute inset-0 bg-[url('/pixel-bg.png')] bg-cover opacity-20"></div>
 
-      <div className="signup-form relative bg-white p-10 rounded-2xl w-1/4 text-center shadow-lg">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">
+      <div className="signup-form relative bg-white p-10 md:p-12 rounded-2xl w-full max-w-md text-center z-10">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
           Create an account on <span className="text-blue-500">Roomify</span>
         </h2>
 
@@ -70,7 +70,7 @@ export default function SignUp() {
           placeholder="Enter your username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="w-full border-2 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4"
+          className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4 transition-all"
         />
 
         <input
@@ -78,7 +78,7 @@ export default function SignUp() {
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full border-2 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4"
+          className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4 transition-all"
         />
 
         <input
@@ -86,7 +86,7 @@ export default function SignUp() {
           placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full border-2 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4"
+          className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4 transition-all"
         />
 
         <input
@@ -94,15 +94,15 @@ export default function SignUp() {
           placeholder="Repeat your password"
           value={repeatPassword}
           onChange={(e) => setRepeatPassword(e.target.value)}
-          className="w-full border-2 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4"
+          className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mb-4 transition-all"
         />
 
         <button
           onClick={handleSignUp}
-          className="w-full bg-green-500 text-white py-2 rounded-lg mt-4 flex justify-center items-center"
+          className="w-full bg-green-500 text-white py-3 rounded-lg mt-4 flex justify-center items-center transition-all hover:bg-green-600"
         >
           {loading ? (
-            <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+            <span className="animate-spin h-6 w-6 border-2 border-white border-t-transparent rounded-full"></span>
           ) : (
             "Sign Up"
           )}

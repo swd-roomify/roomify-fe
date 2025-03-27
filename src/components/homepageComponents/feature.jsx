@@ -1,7 +1,9 @@
-import "../../assets/style/css/homepage/feature.css";
+import React from 'react';
+import '../../assets/style/css/homepage/feature.css';
 
 const features = [
   {
+
     title: "Interactive virtual game",
     description: "Enhance team engagement with built-in interactive virtual games designed for fun breaks, team bonding, and stress relief.",
     image: "../../../public/assets/images/virtualGame.png",
@@ -15,6 +17,7 @@ const features = [
     title: "Set virtual events",
     description: "Plan and host virtual events effortlessly within your office space.",
     image: "../../../public/assets/images/virtualEvent.jpg",
+
   },
 ];
 

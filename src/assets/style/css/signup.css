@@ -1,12 +1,29 @@
-.signin-button {
-    background: rgb(6, 199, 148);
-}
+/* signup.css */
 
-.signin-button:hover {
-    background: rgb(5, 159, 118);
-}
-
-.login-form {
-    background: rgb(255, 255, 255);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
+.signup-form {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  .signup-form input {
+    background: #fafafa;
+    transition: background 0.3s ease, border-color 0.3s ease;
+    color: #333;
+  }
+  
+  .signup-form input:focus {
+    background: #fff;
+    border-color: #007bff;
+  }
+  
+  .signup-form button {
+    background: linear-gradient(135deg, #06c794, #049f76);
+    border: none;
+    transition: background 0.3s ease;
+  }
+  
+  .signup-form button:hover {
+    background: linear-gradient(135deg, #049f76, #037d5b);
+  }
+  

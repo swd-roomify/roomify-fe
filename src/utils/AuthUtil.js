@@ -1,15 +1,13 @@
 import { BASE_API_URL } from '@/constants/apiBaseUrlConstants';
 import axios from 'axios';
 
-
-
 export const checkAuth = () => {
-    return (localStorage.getItem('token') != null && localStorage.getItem('user') != null )
+    return (localStorage.getItem('token') != null && localStorage.getItem('user') != null)
 }
 
 export const SignUpUtil = async (username, email, password) => {
     try {
-        const response = await axios.post(`${BASE_API_URL}/api/user/register`, {
+        const response = await axios.post(`${BASE_API_URL}/api/auth/register-account`, {
             username,
             email,
             password,
@@ -28,7 +26,7 @@ export const SignUpUtil = async (username, email, password) => {
 
 export const SignInUtil = async (email, password) => {
     try {
-        const response = await axios.post(`${BASE_API_URL}/api/user/signin`, {
+        const response = await axios.post(`${BASE_API_URL}/api/user/v1/signin`, {
             email,
             password,
         }, {
@@ -40,9 +38,71 @@ export const SignInUtil = async (email, password) => {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
 
+        const expirationTime = Date.now() + 24 * 60 * 60 * 1000;
+        localStorage.setItem('token_expiration', expirationTime);
+
         return response.data;
     } catch (error) {
         console.error('Error during sign-in:', error);
+        throw error;
+    }
+};
+
+export const getUserUtil = async (username) => {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("No token found");
+
+        const response = await axios.get(`${BASE_API_URL}/api/auth/me/${username}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        throw error;
+    }
+};
+
+export const isTokenValid = () => {
+    const expiration = localStorage.getItem('token_expiration');
+    
+    if (!expiration || Date.now() > expiration) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('token_expiration');
+        return false;
+    }
+    
+    return true;
+};
+
+export const updatePasswordUtil = async (userId, oldPassword, newPassword) => {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("No token found");
+
+        const response = await axios.put(
+            `${BASE_API_URL}/api/auth/update-password`,
+            {
+                userId,
+                oldPassword,
+                newPassword,
+            },
+            {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error("Error updating password:", error);
         throw error;
     }
 };

@@ -3,7 +3,7 @@ import { BASE_API_URL } from './apiBaseUrlConstants';
 
 
 
-export const WS_ENDPOINT = import.meta.env.VITE_REACT_APP_WS_URL || `${BASE_API_URL}/ws`;
+export const WS_ENDPOINT = `${BASE_API_URL}/ws`;
 
 export const WS_TOPICS = {
     POSITIONS: '/topic/positions/',

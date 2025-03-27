@@ -53,3 +53,19 @@ export const JoinRoomUserUtil = async (roomCode) => {
         throw error;
     }
 };
+
+export const GetAllRooms = async () => {
+    try{
+        const response = await axios.get(`${BASE_API_ROOM_URL}`, {}, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch(error){
+        console.error("Error getting rooms", error);
+        throw error;
+    }
+}

@@ -1,11 +1,135 @@
-.user-room-list {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .user-room-list h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
+.user-room-container {
+  display: flex;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Cột trái - Phòng của user hiện tại */
+.user-rooms {
+  flex: 1;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-rooms h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Cột phải - Phòng của user khác */
+.other-rooms {
+  flex: 1;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.other-rooms h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.pagination button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.pagination button:hover {
+  background: #0056b3;
+}
+
+.pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Định dạng chung */
+.create-room, .room-join {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.create-room form, .room-join form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Ô nhập liệu */
+.create-room-input, .room-join-input {
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  width: 250px;
+  transition: all 0.3s ease;
+}
+
+.create-room-input:focus, .room-join-input:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+/* Nút chung */
+.create-room-btn, .room-join-btn {
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.create-room-btn {
+  background: linear-gradient(135deg, #28a745, #218838);
+  color: #fff;
+}
+
+.create-room-btn:hover {
+  background: linear-gradient(135deg, #218838, #1e7e34);
+  transform: translateY(-2px);
+}
+
+.room-join-btn {
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: #fff;
+}
+
+.room-join-btn:hover {
+  background: linear-gradient(135deg, #138496, #117a8b);
+  transform: translateY(-2px);
+}

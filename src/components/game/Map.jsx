@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "../../assets/style/css/map.css";
 import Player from './Player';
 import usePlayerMovement from '../../hooks/usePlayerMovement';
@@ -17,7 +17,7 @@ const Map = ({ onNearbyPlayersUpdate, user, users, sendPosition, chatMessages })
   useEffect(() => {
     if (position.x !== prevPositionRef.current.x || position.y !== prevPositionRef.current.y) {
       prevPositionRef.current = position;
-      sendPosition(position.x, position.y)
+      sendPosition(position.x, position.y);
     }
   }, [position, sendPosition]);
 
@@ -29,14 +29,13 @@ const Map = ({ onNearbyPlayersUpdate, user, users, sendPosition, chatMessages })
       });
       return distance <= 50 && player.user_id !== user.user_id;
     });
-
     onNearbyPlayersUpdate(nearbyPlayers);
-  }, [users, position, onNearbyPlayersUpdate,user.user_id]);
+  }, [users, position, onNearbyPlayersUpdate, user.user_id]);
 
   useEffect(() => {
     if (chatMessages.length) {
       const latestMessage = chatMessages[chatMessages.length - 1];
-      setChatBubbles((prev) => ({
+      setChatBubbles(prev => ({
         ...prev,
         [latestMessage.userId]: latestMessage.message,
       }));
