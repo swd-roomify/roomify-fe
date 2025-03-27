@@ -4,9 +4,8 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 20px;
     background-color: #1f2937;
-    padding: 3%;
+    padding: 1%;
     color: white;
 }
 
@@ -16,11 +15,11 @@
 }
 
 .footer-logo img {
-    width: 100px; /* Adjust logo size */
+    width: 100px; 
     height: auto;
     transition: transform 0.3s ease;
 }
 
 .footer-logo img:hover {
-    transform: scale(1.1); /* Slight zoom effect */
+    transform: scale(1.1);
 }

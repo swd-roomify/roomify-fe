@@ -8,9 +8,9 @@ const Footer = () => {
         className="footer-logo" 
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >
-        <img src="/your-logo.png" alt="Logo" />
+        <img src="/assets/images/globe.png" alt="Logo" />
       </div>
-      <p>© {new Date().getFullYear()} Your Company. All rights reserved.</p>
+      <p>© {new Date().getFullYear()} Roomify. All rights reserved.</p>
     </footer>
   );
 };
