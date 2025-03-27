@@ -30,8 +30,8 @@ const RoutePath = () => {
           <Route path='signin' element={<SignIn />} />
           <Route path='signup' element={<SignUp />} />
           <Route path='room' element={<ProtectedRoute><UserRoomList /></ProtectedRoute>} />
-          <Route path='menu' element={<ProtectedRoute><MenuPage /></ProtectedRoute>} />
-          <Route path='profile' element={<Profile/>} />
+          {/* <Route path='menu' element={<ProtectedRoute><MenuPage /></ProtectedRoute>} /> */}
+          <Route path='profile' element={<ProtectedRoute><Profile/></ProtectedRoute> } />
         </Route>
         <Route path='join' element={<ProtectedRoute><JoinPage /></ProtectedRoute>} />
         <Route path='play' element={<ProtectedRoute><Game /></ProtectedRoute>} />

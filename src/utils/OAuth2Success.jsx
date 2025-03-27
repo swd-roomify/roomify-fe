@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {jwtDecode} from "jwt-decode"; 
+import { jwtDecode } from "jwt-decode";
 import { getUserUtil } from "./AuthUtil";
 
 const OAuth2Success = () => {
@@ -11,25 +11,26 @@ const OAuth2Success = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
-
+    const expirationTime = Date.now() + 24 * 60 * 60 * 1000;
+    localStorage.setItem('token_expiration', expirationTime);
     if (token) {
       localStorage.setItem("token", token);
 
       try {
         const decoded = jwtDecode(token);
         console.log("Decoded Token:", (decoded));
-        if(decoded.username){
+        if (decoded.username) {
           getUserUtil(decoded.username)
             .then((userData) => {
               localStorage.setItem("user", JSON.stringify(userData));
               navigate('/room');
             })
             .catch((error) => {
-              console.error("Error fetching user data",error);
+              console.error("Error fetching user data", error);
               navigate('/signin');
             });
         }
-        else{
+        else {
           console.error("No username found in token claims");
           navigate("/signin");
         }
