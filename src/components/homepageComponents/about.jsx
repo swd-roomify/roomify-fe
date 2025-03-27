@@ -1,10 +1,10 @@
-import "../../assets/style/css/homepage/about.css"; 
+import "../../assets/style/css/homepage/about.css";
 
 const About = () => {
   return (
     <div className="about-container">
       <div className="about-video">
-        <span>VIDEO PLACEHOLDER</span>
+        <img src='../../../public/assets/images/front.jpg'></img>
       </div>
 
       <div className="about-content">
