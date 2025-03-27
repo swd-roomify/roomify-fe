@@ -12,7 +12,7 @@ const ChangePasswordPopup = ({ onClose }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        if (!oldPassword || !newPassword || !confirmPassword) {
+        if (!newPassword || !confirmPassword) {
             setMessage("Please fill in all fields.");
             return;
         }
@@ -30,13 +30,13 @@ const ChangePasswordPopup = ({ onClose }) => {
         setLoading(true);
         try {
             await updatePasswordUtil(user.user_id, oldPassword, newPassword);
-            setMessage("Password changed successfully!");
+            setMessage("✅ Password changed successfully!");
             setTimeout(() => {
                 setMessage("");
                 onClose();
             }, 2000);
         } catch (error) {
-            setMessage("Failed to change password. Please try again.");
+            setMessage("❌ Failed to change password. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -45,14 +45,15 @@ const ChangePasswordPopup = ({ onClose }) => {
     return (
         <div className="popup-overlay">
             <div className="popup-content">
-                <h2>Change Password</h2>
+                <button className="close-btn" onClick={onClose}>&times;</button>
+                <h2>🔒 Change Password</h2>
                 <form onSubmit={handleSubmit}>
                     <label>Old Password</label>
+                    <small className="info-text">Optional if password not initialized (created by Google)</small>
                     <input 
                         type="password" 
                         value={oldPassword} 
                         onChange={(e) => setOldPassword(e.target.value)} 
-                        required 
                     />
 
                     <label>New Password</label>
@@ -75,9 +76,8 @@ const ChangePasswordPopup = ({ onClose }) => {
                     
                     <div className="popup-actions">
                         <button type="submit" className="submit-btn" disabled={loading}>
-                            {loading ? "Updating..." : "Change"}
+                            {loading ? "Updating..." : "Change Password"}
                         </button>
-                        <button type="button" className="close-btn" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
             </div>
