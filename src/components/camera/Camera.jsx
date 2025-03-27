@@ -94,24 +94,43 @@ const Camera = ({ nearbyPlayers, user }) => {
         console.error("Error accessing camera:", error);
       }
     }
-  
+
     setIsCameraOn(!isCameraOn);
   };
 
   return (
     <>
-      <div className="user-camera">
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted={!isMicOn}
-          className="user-video"
-          style={{ display: isCameraOn ? "block" : "none" }}
-        />
-        {!isCameraOn && <div className="camera-off">Camera Off</div>}
+      <div className="camera-container">
+        {/* 🔥 Camera của bạn */}
+        <div className="user-camera">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted={!isMicOn}
+            className="user-video"
+            style={{ display: isCameraOn ? "block" : "none" }}
+          />
+          {!isCameraOn && <div className="camera-off">Camera Off</div>}
+        </div>
+
+        {/* 🔥 Camera của những người khác */}
+        <div id="camera-placeholder" ref={othersContainerRef}>
+          {producers.map((player) => (
+            <div key={player.user_id} className="other-camera">
+              <video
+                id={`video-${player.user_id}`}
+                className="other-video"
+                autoPlay
+                playsInline
+              />
+              <div className="camera-name">{player.username}</div>
+            </div>
+          ))}
+        </div>
       </div>
 
+      {/* 🔥 Điều khiển mic & camera */}
       <div className="camera-controls">
         <button onClick={toggleMic} className={`control-btn ${isMicOn ? "active" : "inactive"}`}>
           {isMicOn ? <FaMicrophone /> : <FaMicrophoneSlash />}
@@ -121,8 +140,6 @@ const Camera = ({ nearbyPlayers, user }) => {
         </button>
       </div>
 
-      {/* 🔥 Thêm lại phần hiển thị camera của người chơi gần nhau */}
-      <div id="camera-placeholder" className="grid grid-cols-3 gap-4" ref={othersContainerRef} />
     </>
   );
 };

@@ -1,10 +1,18 @@
-/* Camera của người dùng (hiển thị trên cùng màn hình) */
-.user-camera {
+/* 🔥 Container chứa tất cả camera (cả bạn và người khác) */
+/* 🔥 Container chứa tất cả camera */
+.camera-container {
   position: fixed;
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 180px;
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+
+/* 🔥 Camera của bạn và camera của người khác (kích thước thống nhất) */
+.user-camera, .other-camera {
+  width: 160px; /* 🔥 Thống nhất kích thước */
   height: 120px;
   background-color: black;
   border-radius: 8px;
@@ -13,23 +21,40 @@
   justify-content: center;
   overflow: hidden;
   border: 2px solid #06c794;
-  z-index: 100;
+  position: relative;
 }
 
-.user-video {
+/* 🔥 Video trong camera */
+.user-video, .other-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 /* Khi camera bị tắt */
-.camera-off {
+.camera-off, .other-camera-off {
   color: white;
   font-size: 14px;
   font-weight: bold;
+  text-align: center;
 }
 
-/* Điều khiển camera + mic */
+/* 🔥 Tên người chơi */
+.camera-name {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+
+/* 🔥 Điều khiển camera + mic */
 .camera-controls {
   position: fixed;
   bottom: 15px;
