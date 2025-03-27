@@ -22,6 +22,7 @@ const SignIn = ({ setIsLoggedIn }) => {
     try {
       const data = await SignInUtil(email, password);
       navigate("/room");
+      window.location.reload();
     } catch (err) {
       console.error("Error during sign-in:", err);
       setError("Invalid email or password");

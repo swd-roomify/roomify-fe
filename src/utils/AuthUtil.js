@@ -38,6 +38,9 @@ export const SignInUtil = async (email, password) => {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
 
+        const expirationTime = Date.now() + 24 * 60 * 60 * 1000;
+        localStorage.setItem('token_expiration', expirationTime);
+
         return response.data;
     } catch (error) {
         console.error('Error during sign-in:', error);
@@ -62,4 +65,17 @@ export const getUserUtil = async (username) => {
         console.error("Error fetching user data:", error);
         throw error;
     }
+};
+
+export const isTokenValid = () => {
+    const expiration = localStorage.getItem('token_expiration');
+    
+    if (!expiration || Date.now() > expiration) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('token_expiration');
+        return false;
+    }
+    
+    return true;
 };

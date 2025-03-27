@@ -4,8 +4,18 @@ import '../../assets/style/css/homepage/navbar.css';
 
 const Navbar = () => {
   const [bgOpacity, setBgOpacity] = useState(0);
+  const [user, setUser] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    // Kiểm tra user trong localStorage
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,7 +30,7 @@ const Navbar = () => {
 
   const scrollToSection = (id) => {
     if (location.pathname !== "/") {
-      navigate(`/?scrollTo=${id}`); // Navigate to homepage with query param
+      navigate(`/?scrollTo=${id}`);
     } else {
       const element = document.getElementById(id);
       if (element) element.scrollIntoView({ behavior: "smooth" });
@@ -34,9 +44,17 @@ const Navbar = () => {
       setTimeout(() => {
         const element = document.getElementById(scrollTo);
         if (element) element.scrollIntoView({ behavior: "smooth" });
-      }, 100); 
+      }, 100);
     }
   }, [location]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("token_expiration");
+    setUser(null);
+    navigate("/");
+  };
 
   return (
     <nav className="navbar" style={{ backgroundColor: `rgba(0, 0, 0, ${bgOpacity})` }}>
@@ -48,7 +66,7 @@ const Navbar = () => {
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         >
-          MyLogo
+          ROOMIFY
         </span>
         <div className="nav-buttons">
           <span onClick={() => scrollToSection("about")} className="btn btn-nav">
@@ -60,8 +78,39 @@ const Navbar = () => {
           <span onClick={() => scrollToSection("contact")} className="btn btn-nav">
             Contact
           </span>
-          <button onClick={() => navigate("/signin")} className="btn btn-login">Sign In</button>
-          <button onClick={() => navigate("/signup")} className="btn btn-signup">Get Started</button>
+
+          {user ? (
+            <div className="user-dropdown">
+              <span 
+                className="btn btn-user" 
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                {user.email}
+              </span>
+              {dropdownOpen && (
+                <div className="dropdown-menu">
+                  <span className="dropdown-item" onClick={() => navigate("/profile")}>
+                    Profile
+                  </span>
+                  <span className="dropdown-item" onClick={() => navigate("/room")}>
+                    Rooms
+                  </span>
+                  <span className="dropdown-item logout" onClick={handleLogout}>
+                    Sign Out
+                  </span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <button onClick={() => navigate("/signin")} className="btn btn-login">
+                Sign In
+              </button>
+              <button onClick={() => navigate("/signup")} className="btn btn-signup">
+                Get Started
+              </button>
+            </>
+          )}
         </div>
       </div>
     </nav>
