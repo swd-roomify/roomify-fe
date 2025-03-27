@@ -1,13 +1,12 @@
-import React from 'react';
-import '../../assets/style/css/homepage/about.css';
 import { useNavigate } from 'react-router-dom';
+import '../../assets/style/css/homepage/about.css';
 
 const About = () => {
   const navigate = useNavigate();
   return (
     <div className="about-container">
       <div className="about-video">
-        <span>VIDEO PLACEHOLDER</span>
+        <img src='../../../public/assets/images/front.jpg'></img>
       </div>
       <div className="about-content">
         <h2>VIRTUAL - INTERACTIVE ZONE FOR YOUR COMMUNITY</h2>

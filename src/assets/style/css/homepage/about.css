@@ -19,7 +19,7 @@
 .about-video {
     width: 100%;
     max-width: 700px;
-    height: 400px; 
+    height: auto; 
     background-color: #d1d5db; 
     display: flex;
     align-items: center;
