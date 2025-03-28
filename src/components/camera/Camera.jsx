@@ -19,20 +19,27 @@ const Camera = ({ nearbyPlayers, user }) => {
   }, [user]);
 
   const startProducing = async () => {
+    console.log("startProducing called"); // 🔥 Log to confirm function execution
     if (retryCountRef.current >= 3) return;
 
     try {
       if (videoRef.current) {
+        console.log("Calling produce with userId:", user.user_id); // 🔥 Log before calling produce
         await produce({ userId: user.user_id });
         retryCountRef.current = 0;
       } else {
+        console.warn("videoRef.current is null, retrying..."); // 🔥 Log if videoRef is not ready
         retryCountRef.current++;
         if (retryCountRef.current < 3) {
           setTimeout(startProducing, 1500);
         }
       }
     } catch (error) {
-      console.error("Error producing media:", error);
+      if (error.name === "NotReadableError") {
+        console.error("Microphone is already in use or unavailable:", error); // 🔥 Log specific error
+      } else {
+        console.error("Error in startProducing:", error); // 🔥 Log other errors
+      }
       retryCountRef.current++;
       if (retryCountRef.current < 3) {
         setTimeout(startProducing, 1500);
@@ -81,7 +88,7 @@ const Camera = ({ nearbyPlayers, user }) => {
         videoRef.current.srcObject.getTracks().forEach(track => track.stop());
         videoRef.current.srcObject = null;
       }
-      disconnect({ userId: user.user_id }); // 🔥 Thông báo Mediasoup dừng stream
+      disconnect({ userId: user.user_id }); // 🔥 Notify Mediasoup to stop stream
     } else {
       console.log("Turning on camera...");
       try {
@@ -89,9 +96,13 @@ const Camera = ({ nearbyPlayers, user }) => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
-        startProducing(); // 🔥 Khi bật lại camera, gọi lại `produce()`
+        startProducing(); 
       } catch (error) {
-        console.error("Error accessing camera:", error);
+        if (error.name === "NotReadableError") {
+          console.error("Camera is already in use or unavailable:", error);
+        } else {
+          console.error("Error accessing camera:", error);
+        }
       }
     }
 

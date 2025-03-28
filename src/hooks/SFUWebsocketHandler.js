@@ -112,31 +112,49 @@ const useMediasoup = () => {
 
   // open camera
   const produce = async (parameters) => {
+    console.log("produce called with parameters:", parameters); // 🔥 Log to confirm function execution
     if (isCamera) {
       console.log("Not yet! Still under development");
-      // videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
-      // const streamId = videoRef.current.srcObject.id;
-      // const { userId } = parameters;
-
-      // send(mediasoupServerConstants.closeProducerTransport, {
-      //   userId,
-      //   streamId,
-      // });
-      // setIsCamera(false);
     } else {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      const streamId = stream.id;
-      const { userId } = parameters;
+      try {
+        // Log available devices
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        console.log("Available media devices:", devices);
 
-      await send(mediasoupServerConstants.createProducerTransport, {
-        userId,
-        streamId,
-      });
-      videoRef.current.srcObject = stream;
-      setIsCamera(true);
+        let stream;
+        try {
+          // Attempt to get both video and audio
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true,
+          });
+        } catch (audioError) {
+          if (audioError.name === "NotReadableError") {
+            console.warn("Microphone unavailable, falling back to video-only:", audioError);
+            // Fallback to video-only if audio is unavailable
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          } else {
+            throw audioError; // Re-throw other errors
+          }
+        }
+
+        const streamId = stream.id;
+        const { userId } = parameters;
+
+        console.log("Sending createProducerTransport event with data:", {
+          userId,
+          streamId,
+        }); // 🔥 Log the event and data being sent
+
+        await send(mediasoupServerConstants.createProducerTransport, {
+          userId,
+          streamId,
+        });
+        videoRef.current.srcObject = stream;
+        setIsCamera(true);
+      } catch (error) {
+        console.error("Error in produce:", error); // 🔥 Log other errors
+      }
     }
   };
 
@@ -249,32 +267,6 @@ const useMediasoup = () => {
       }
     );
 
-    await transport.on(
-      "icegatheringstatechange",
-      async ({ iceGatheringState }, callback, errback) => {
-        try {
-          console.log("iceGatheringState", iceGatheringState);
-        } catch (error) {
-          errback(error);
-        }
-      }
-    );
-
-    await transport.on(
-      "connectionstatechange",
-      async ({ connectionState }, callback, errback) => {
-        try {
-          console.log("connectionState", connectionState);
-        } catch (error) {
-          errback(error);
-        }
-      }
-    );
-
-    await transport.on("close", async (callback, errback) => {
-      console.log("close");
-    });
-
     try {
       const stream = videoRef.current.srcObject;
 
@@ -288,8 +280,10 @@ const useMediasoup = () => {
       if (!videoTrack) {
         throw new Error("No video track available");
       }
+
+      // Handle missing audio track gracefully
       if (!audioTrack) {
-        throw new Error("No audio track available");
+        console.warn("No audio track available, proceeding with video only.");
       }
 
       const videoProducer = await transport.produce({
@@ -297,12 +291,15 @@ const useMediasoup = () => {
         encodings: [{ maxBitrate: 900000 }],
       });
 
-      const audioProducer = await transport.produce({
-        track: audioTrack,
-      });
+      let audioProducer = null;
+      if (audioTrack) {
+        audioProducer = await transport.produce({
+          track: audioTrack,
+        });
+      }
 
-      if (!videoProducer || !audioProducer) {
-        throw new Error("Failed to create producers");
+      if (!videoProducer) {
+        throw new Error("Failed to create video producer");
       }
 
       producerRef.current = { videoProducer, audioProducer };

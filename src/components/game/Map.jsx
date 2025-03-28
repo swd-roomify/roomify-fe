@@ -27,7 +27,7 @@ const Map = ({ onNearbyPlayersUpdate, user, users, sendPosition, chatMessages })
         x: player.position_x,
         y: player.position_y,
       });
-      return distance <= 50 && player.user_id !== user.user_id;
+      return distance <= 200 && player.user_id !== user.user_id;
     });
     onNearbyPlayersUpdate(nearbyPlayers);
   }, [users, position, onNearbyPlayersUpdate, user.user_id]);
